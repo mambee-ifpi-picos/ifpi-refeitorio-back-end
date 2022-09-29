@@ -12,6 +12,7 @@
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint --fix . --ext .ts",
     "pretty": "prettier --write . --ext .ts",
+    "prepare": "husky install",
     "precommit": "yarn lint-fix && yarn pretty",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
