@@ -1,5 +1,5 @@
 import  BaseRepository  from './base/BaseRepository';
-import { User } from './base/ModelTypes';
+import { User } from './base/models/ModelTypes';
 
 export default class UserRepository extends BaseRepository {
 

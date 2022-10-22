@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import UserRepository from '../repositories/UserRespository';
-import { User } from '../repositories/base/ModelTypes';
+import { User } from '../repositories/base/models/ModelTypes';
 
 const routes = Router();
 const userRepository = new UserRepository();
