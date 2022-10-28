@@ -16,3 +16,11 @@ model User {
   name  String
   @@map("users") // nome da tabela 
 }
+
+model Menu {
+  id Int @id @default(autoincrement())
+  snack String
+  date DateTime
+  items String
+  @@map("menu ")
+}
