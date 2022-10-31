@@ -1,11 +1,13 @@
-import { Menu } from "../repositories/base/models/MenuModel";
 import MenuRepository from '../repositories/MenuRepository';
+import { Menu } from '../repositories/base/models/MenuModel';
+import IMenuServiceInterface from './interfaces/MenuServiceInterface';
+
 
 
 const menuRepository = new MenuRepository();
 
-export class MenuService {
-    async addMenu({items, date, snack}: Menu): Promise<string> {
+export default class MenuService implements IMenuServiceInterface {
+    async addMenu({ items, date, snack }: Menu): Promise<string> {
       const menuAdd = await menuRepository.add({
         items,
         date,

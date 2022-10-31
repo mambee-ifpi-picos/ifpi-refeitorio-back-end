@@ -1,7 +1,8 @@
-import { Menu } from "../../repositories/base/models/MenuModel";
+import { Menu } from '../../repositories/base/models/MenuModel';
 
 
-export interface MenuServiceInterface {
-    addMenu({items, date, snack}: Menu): Promise<string>;
+export default interface IMenuServiceInterface {
+    addMenu({ items, date, snack }: Menu): Promise<string>;
     getAll(): Promise<Menu[]>;
-}
+// eslint-disable-next-line semi
+};

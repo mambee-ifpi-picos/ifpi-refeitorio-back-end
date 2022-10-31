@@ -1,11 +1,11 @@
+/* eslint-disable consistent-return */
 import { Router, Request, Response } from 'express';
-import { Menu } from '../repositories/base/models/MenuModel'
-import { MenuService } from '../services/MenuService';
+import { Menu } from '../repositories/base/models/MenuModel';
+import MenuService from '../services/MenuService';
 
 const routes = Router();
 const menuService = new MenuService();
 
-//CRIAR TABELA MENU NO BANCO DE DADOS
 
 routes.get('/', async (res: Response) => {
     try {
@@ -19,11 +19,11 @@ routes.get('/', async (res: Response) => {
       }
 });
 
-routes.post("/", async (req: Request, res: Response) => {
+routes.post('/', async (req: Request, res: Response) => {
     try {
       const { items, date, snack } = req.body;
 
-      if(items == null || date == null || snack == null) throw new Error('Preencha todos os campos obrigatórios!')
+      if(items == null || date == null || snack == null) throw new Error('Preencha todos os campos obrigatórios!');
   
       const msg = await menuService.addMenu({
         items,
@@ -36,7 +36,7 @@ routes.post("/", async (req: Request, res: Response) => {
     }
   });
 
-  routes.put("/:id", async (/*req: Request,*/ res: Response) => {
+  routes.put('/:id', async (req: Request, res: Response) => {
     try {
   
       return res.status(200);
@@ -46,7 +46,7 @@ routes.post("/", async (req: Request, res: Response) => {
     }
   });
   
-  routes.delete("/:id", async (/*req: Request,*/ res: Response) => {
+  routes.delete('/:id', async ( res: Response) => {
     try {
       
       res.status(200);
