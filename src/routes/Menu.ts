@@ -15,7 +15,7 @@ routes.get('/', async (res: Response) => {
       return res.status(200).json(menus);
     
     } catch (error) {
-        res.status(404).json(error);
+        return res.status(404).send(error);
       }
 });
 
@@ -38,8 +38,11 @@ routes.post('/', async (req: Request, res: Response) => {
 
   routes.put('/:id', async (req: Request, res: Response) => {
     try {
-  
-      return res.status(200);
+      const { snack, items, date } = req.body;
+      const { id } = req.params;
+      const menuUpdate = await menuService.updateMenu({ snack, items, date }, Number(id));
+
+      return res.status(200).json(menuUpdate);
   
     } catch (error) {
       res.status(400).json(error.message);

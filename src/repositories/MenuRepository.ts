@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import  BaseRepository  from './base/BaseRepository';
 import { Menu } from './base/models/MenuModel';
 import { IMenuRepository } from './interfaces/MenuRepositoryInterface';
@@ -18,4 +19,24 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
     return super.getPrisma().menu.findMany({});
   }
 
+  public async update({ snack, date, items }: Menu, id: number): Promise<Menu> {
+    const result = await super.getPrisma().menu.update({
+      where: {
+        id,
+      },
+      data: {
+        snack,
+        date,
+        items,
+      } as Menu,
+    });
+
+    return result;
+  }
+
+  async selectOne( where: Prisma.MenuWhereUniqueInput): Promise<Menu> {
+    const result = await super.getPrisma().menu.findUnique({ where });
+
+    return result;
+  }
 }

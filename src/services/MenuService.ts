@@ -22,4 +22,14 @@ export default class MenuService implements IMenuServiceInterface {
 
       return menus;
     }
+
+    async updateMenu(menu: Menu, id: number): Promise<Menu> {
+      const userExist = menuRepository.selectOne({ id });
+
+      if(!userExist) throw new Error ('Usuário não encontrado');
+
+      const menuUpdate = await menuRepository.update(menu, id);
+
+      return menuUpdate;
+    }
 }
