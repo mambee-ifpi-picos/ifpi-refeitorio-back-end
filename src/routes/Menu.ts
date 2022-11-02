@@ -7,7 +7,7 @@ const routes = Router();
 const menuService = new MenuService();
 
 
-routes.get('/', async (res: Response) => {
+routes.get('/', async (req: Request, res: Response) => {
     try {
 
       const menus = await menuService.getAll();
@@ -22,8 +22,8 @@ routes.get('/', async (res: Response) => {
 routes.post('/', async (req: Request, res: Response) => {
     try {
       const { items, date, snack } = req.body;
-
-      if(items == null || date == null || snack == null) throw new Error('Preencha todos os campos obrigatórios!');
+      
+      if( !items || !date || !snack ) throw new Error('Preencha todos os campos obrigatórios!');
   
       const msg = await menuService.addMenu({
         items,
@@ -32,7 +32,7 @@ routes.post('/', async (req: Request, res: Response) => {
       } as Menu);
       return res.status(201).send(msg);
     } catch (error) {
-      res.status(400).json(error);
+      res.status(400).json(error.message);
     }
   });
 
@@ -49,17 +49,14 @@ routes.post('/', async (req: Request, res: Response) => {
     }
   });
   
-  routes.delete('/:id', async ( res: Response) => {
+  routes.delete('/:id', async ( req: Request, res: Response) => {
     try {
-      
-      res.status(200);
-
+      const { id } = req.params;
+      const menuDelete = await menuService.deleteMenu( Number(id));
+      res.status(200).json(menuDelete);
     } catch (error) {
-      res.status(400).end(error);
+      res.status(400).end(error.message);
     }
-  
   });
-  
-  
 
 export default routes;

@@ -39,4 +39,14 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
 
     return result;
   }
+
+  async delete( id: number ): Promise<string> {
+    const result = await super.getPrisma().menu.delete({
+      where: {
+        id
+      }
+    });
+    const msg = 'Menu removido com sucesso';
+    return msg;
+  }
 }

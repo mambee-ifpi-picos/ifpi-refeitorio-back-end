@@ -14,7 +14,7 @@ export default class MenuService implements IMenuServiceInterface {
         snack,
       } as Menu);
 
-    return menuAdd;
+      return menuAdd;
     }
 
     async getAll(): Promise<Menu[]> {
@@ -24,12 +24,19 @@ export default class MenuService implements IMenuServiceInterface {
     }
 
     async updateMenu(menu: Menu, id: number): Promise<Menu> {
-      const userExist = menuRepository.selectOne({ id });
+      const userExist = await menuRepository.selectOne({ id });
 
-      if(!userExist) throw new Error ('Usuário não encontrado');
+      if(!userExist) throw new Error ('Menu não encontrado');
 
       const menuUpdate = await menuRepository.update(menu, id);
 
       return menuUpdate;
+    }
+
+    async deleteMenu( id: number ): Promise<string> {
+      const menuExist = await menuRepository.selectOne({ id });
+      if(!menuExist) throw new Error( 'Menu não encontrado' );
+      const menuDelete = await menuRepository.delete(id);
+      return menuDelete;
     }
 }
