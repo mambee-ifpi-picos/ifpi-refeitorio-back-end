@@ -1,10 +1,11 @@
 /* eslint-disable consistent-return */
 import { Router, Request, Response } from 'express';
+import MenuRepository from '../repositories/MenuRepository';
 import { Menu } from '../repositories/base/models/MenuModel';
 import MenuService from '../services/MenuService';
 
 const routes = Router();
-const menuService = new MenuService();
+const menuService = new MenuService(new MenuRepository());
 
 
 routes.get('/', async (req: Request, res: Response) => {
