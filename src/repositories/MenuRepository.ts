@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import  BaseRepository  from './base/BaseRepository';
 import { Menu } from './base/models/MenuModel';
-import { IMenuRepository } from './interfaces/MenuRepositoryInterface';
+import IMenuRepository from './interfaces/MenuRepositoryInterface';
 
 export default class MenuRepository extends BaseRepository implements IMenuRepository {
 

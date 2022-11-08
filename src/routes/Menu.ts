@@ -3,10 +3,10 @@ import { Router, Request, Response } from 'express';
 import MenuRepository from '../repositories/MenuRepository';
 import { Menu } from '../repositories/base/models/MenuModel';
 import MenuService from '../services/MenuService';
+import IMenuServiceInterface from '../services/interfaces/MenuServiceInterface';
 
 const routes = Router();
-const menuService = new MenuService(new MenuRepository());
-
+const menuService: IMenuServiceInterface = new MenuService(new MenuRepository());
 
 routes.get('/', async (req: Request, res: Response) => {
     try {
@@ -16,8 +16,8 @@ routes.get('/', async (req: Request, res: Response) => {
       return res.status(200).json(menus);
     
     } catch (error) {
-        return res.status(404).send(error);
-      }
+      return res.status(404).send(error);
+    }
 });
 
 routes.post('/', async (req: Request, res: Response) => {
@@ -25,10 +25,13 @@ routes.post('/', async (req: Request, res: Response) => {
       const { items, date, snack } = req.body;
       
       if( !items || !date || !snack ) throw new Error('Preencha todos os campos obrigatórios!');
+      
+      const dateConvertido = new Date(date)
   
+      console.log(dateConvertido)
       const msg = await menuService.addMenu({
         items,
-        date,
+        date: dateConvertido,
         snack,
       } as Menu);
       return res.status(201).send(msg);
