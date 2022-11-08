@@ -26,9 +26,9 @@ routes.post('/', async (req: Request, res: Response) => {
       
       if( !items || !date || !snack ) throw new Error('Preencha todos os campos obrigatórios!');
       
-      const dateConvertido = new Date(date)
+      const dateConvertido = new Date(date);
   
-      console.log(dateConvertido)
+      console.log(dateConvertido);
       const msg = await menuService.addMenu({
         items,
         date: dateConvertido,
