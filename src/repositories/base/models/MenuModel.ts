@@ -3,3 +3,8 @@ export type Menu = {
     date: Date;
     snack: string;
 };
+
+export type MsgEMenu = {
+    menu: Menu;
+    msg: string;
+}

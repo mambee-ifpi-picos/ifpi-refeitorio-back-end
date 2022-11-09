@@ -1,4 +1,4 @@
-import { Menu } from '../repositories/base/models/MenuModel';
+import { Menu, MsgEMenu } from '../repositories/base/models/MenuModel';
 import IMenuRepository from '../repositories/interfaces/MenuRepositoryInterface';
 import IMenuServiceInterface from './interfaces/MenuServiceInterface';
 
@@ -13,6 +13,9 @@ export default class MenuService implements IMenuServiceInterface {
 
 
     async addMenu({ items, date, snack }: Menu): Promise<string> {
+
+      if (snack !== 'almoço' && snack !== 'janta') throw new Error ('Preencha a refeição com "almoço" ou "janta."');
+
       const menuAdd = await this.menuRepository.add({
         items,
         date,
@@ -28,20 +31,23 @@ export default class MenuService implements IMenuServiceInterface {
       return menus;
     }
 
-    async updateMenu(menu: Menu, id: number): Promise<Menu> {
+    async updateMenu(menu: Menu, id: number): Promise<string> {
       const userExist = await this.menuRepository.selectOne({ id });
 
       if(!userExist) throw new Error ('Menu não encontrado');
 
-      const menuUpdate = await this.menuRepository.update(menu, id);
+      const msg = await this.menuRepository.update(menu, id);
 
-      return menuUpdate;
+      return msg;
     }
 
-    async deleteMenu( id: number ): Promise<string> {
-      const menuExist = await this.menuRepository.selectOne({ id });
-      if(!menuExist) throw new Error( 'Menu não encontrado' );
-      const menuDelete = await this.menuRepository.delete(id);
-      return menuDelete;
+    async deleteMenu( id: number ): Promise<MsgEMenu> {
+      const menu = await this.menuRepository.selectOne({ id });
+
+      if(!menu) throw new Error( 'Menu não encontrado' );
+
+      const msg = await this.menuRepository.delete(id);
+
+      return { msg, menu };
     }
 }
