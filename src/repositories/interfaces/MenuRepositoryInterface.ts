@@ -5,7 +5,7 @@ interface IMenuRepository {
     add(newMenu: Menu): Promise<string>;
     getAll(): Promise<Menu[]>;
     selectOne( where: Prisma.MenuWhereUniqueInput): Promise<Menu>;
-    update({ snack, items, date }: Menu, id: number): Promise<string>;
+    update({ meal, items, date }: Menu, id: number): Promise<string>;
     delete(id: number): Promise<string>;
 }
 

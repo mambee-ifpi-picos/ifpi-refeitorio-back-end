@@ -24,9 +24,9 @@ routes.get('/', async (req: Request, res: Response) => {
 
 routes.post('/', async (req: Request, res: Response) => {
     try {
-      const { items, date, snack } = req.body;
+      const { items, date, meal } = req.body;
       
-      if( !items || !date || !snack ) throw new Error('Preencha todos os campos obrigatórios!');
+      if( !items || !date || !meal ) throw new Error('Preencha todos os campos obrigatórios!');
 
       const smashDate = date.split('/');
       
@@ -39,10 +39,10 @@ routes.post('/', async (req: Request, res: Response) => {
       const msg = await menuService.addMenu({
         items,
         date: dateConvertido,
-        snack,
+        meal,
       } as Menu);
 
-      console.log('O usuário ' + '[email do usuário logado]' + ' registrou o cardápio '+ [items, date, snack])
+      console.log('O usuário ' + '[email do usuário logado]' + ' registrou o cardápio '+ [items, date, meal])
 
       return res.status(201).send(msg);
     } catch (error) {
@@ -52,14 +52,14 @@ routes.post('/', async (req: Request, res: Response) => {
 
   routes.put('/:id', async (req: Request, res: Response) => {
     try {
-      const { snack, items, date } = req.body;
+      const { meal, items, date } = req.body;
       const { id } = req.params;
 
       const dateConvertido = new Date(date);
   
-      const msg = await menuService.updateMenu({ snack, items, date: dateConvertido }, Number(id));
+      const msg = await menuService.updateMenu({ meal, items, date: dateConvertido }, Number(id));
 
-      console.log('O usuário ' + '[email do usuário logado]' + ' alterou dados do cardápio '+ [items, date, snack])
+      console.log('O usuário ' + '[email do usuário logado]' + ' alterou dados do cardápio '+ [items, date, meal])
 
       return res.status(200).json(msg);
   

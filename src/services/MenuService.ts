@@ -12,14 +12,14 @@ export default class MenuService implements IMenuServiceInterface {
   }
 
 
-    async addMenu({ items, date, snack }: Menu): Promise<string> {
+    async addMenu({ items, date, meal }: Menu): Promise<string> {
 
-      if (snack !== 'almoço' && snack !== 'janta') throw new Error ('Preencha a refeição com "almoço" ou "janta."');
+      if (meal !== 'almoço' && meal !== 'janta') throw new Error ('Preencha a refeição com "almoço" ou "janta."');
 
       const menuAdd = await this.menuRepository.add({
         items,
         date,
-        snack,
+        meal,
       } as Menu);
 
       return menuAdd;

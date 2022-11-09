@@ -1,7 +1,7 @@
 export type Menu = {
     items: string;
     date: Date;
-    snack: string;
+    meal: string;
 };
 
 export type MsgEMenu = {

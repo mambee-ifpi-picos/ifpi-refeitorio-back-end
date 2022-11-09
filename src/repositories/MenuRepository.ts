@@ -19,13 +19,13 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
     return super.getPrisma().menu.findMany({});
   }
 
-  public async update({ snack, date, items }: Menu, id: number): Promise<string> {
+  public async update({ meal, date, items }: Menu, id: number): Promise<string> {
     await super.getPrisma().menu.update({
       where: {
         id,
       },
       data: {
-        snack,
+        meal,
         date,
         items,
       } as Menu,
@@ -43,7 +43,7 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
   }
 
   async delete( id: number ): Promise<string> {
-    const result = await super.getPrisma().menu.delete({
+    await super.getPrisma().menu.delete({
       where: {
         id
       }
