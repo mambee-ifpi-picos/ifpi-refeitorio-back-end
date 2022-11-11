@@ -31,13 +31,13 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
       } as Menu,
     });
 
-    const msg = 'Alteração Sava com Sucesso';
+    const msg = 'Alteração Salva com Sucesso';
 
     return msg;
   }
 
-  async selectOne( where: Prisma.MenuWhereUniqueInput): Promise<Menu> {
-    const result = await super.getPrisma().menu.findUnique({ where });
+  async selectOne( where: Prisma.MenuWhereInput): Promise<Menu> {
+    const result = await super.getPrisma().menu.findFirst({ where });
 
     return result;
   }

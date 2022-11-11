@@ -25,13 +25,11 @@ routes.post('/', async (req: Request, res: Response) => {
       const { items, date, meal } = req.body;
       
       if( !items || !date || !meal ) throw new Error('Preencha todos os campos obrigatórios!');
-
       const smashDate = date.split('/');
       
       const day = smashDate[0];
       const month = smashDate[1];
       const year = smashDate[2];
-
       const dateConvertido = new Date( `${year}/${month}/${day}`);
   
       const msg = await menuService.addMenu({
@@ -50,16 +48,19 @@ routes.post('/', async (req: Request, res: Response) => {
     try {
       const { meal, items, date } = req.body;
       const { id } = req.params;
-
-      const smashDate = date.split('/');
-
-      const day = smashDate[0];
-      const month = smashDate[1];
-      const year = smashDate[2];
-
-      const dateConvertido = new Date( `${year}/${month}/${day}`);
   
-      const msg = await menuService.updateMenu({ meal, items, date: dateConvertido }, Number(id));
+      let convertedDate: Date | null;
+      if(date){
+        const smashDate = date.split('/');
+
+        const day = smashDate[0];
+        const month = smashDate[1];
+        const year = smashDate[2];
+
+        convertedDate = new Date( `${year}/${month}/${day}`);
+      }
+  
+      const msg = await menuService.updateMenu({ meal, items, date: convertedDate }, Number(id));
 
 
       return res.status(200).json(msg);
