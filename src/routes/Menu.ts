@@ -72,7 +72,7 @@ routes.post('/', async (req: Request, res: Response) => {
   routes.delete('/:id', async ( req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const { msg, menu } = await menuService.deleteMenu( Number(id));
+      const { msg } = await menuService.deleteMenu( Number(id));
 
       return res.status(200).json(msg);
     } catch (error) {
