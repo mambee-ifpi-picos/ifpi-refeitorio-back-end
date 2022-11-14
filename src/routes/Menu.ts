@@ -16,7 +16,7 @@ routes.get('/', async (req: Request, res: Response) => {
       return res.status(200).json(menus);
     
     } catch (error) {
-      return res.status(404).send(error);
+      return res.status(404).json(error);
     }
 });
 
@@ -38,7 +38,7 @@ routes.post('/', async (req: Request, res: Response) => {
         meal,
       } as Menu);
 
-      return res.status(201).send(msg);
+      return res.status(201).json(msg);
     } catch (error) {
       res.status(400).json(error.message);
     }
@@ -77,7 +77,7 @@ routes.post('/', async (req: Request, res: Response) => {
 
       return res.status(200).json(msg);
     } catch (error) {
-      res.status(400).end(error.message);
+      res.status(400).json(error.message);
     }
   });
 
