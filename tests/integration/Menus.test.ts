@@ -31,6 +31,7 @@ describe('POST menu', () => {
     });
     expect(response.statusCode).toBe(201);
     expect(JSON.parse(response.text)).toBe('Cadastro Salvo com Sucesso.');
+    // expect(String(menu.date) === newMenu.date && menu.meal === newMenu.meal && menu.items === newMenu.items).toBeTruthy();
     expect(menu.meal === newMenu.meal && menu.items === newMenu.items).toBeTruthy();
   });
 
@@ -82,11 +83,13 @@ describe('PUT menu', () => {
     const response = await request(app).put(`${API_MENU}/${menuId}`).send(alterationInMenu);
     const menu = await prisma.menu.findFirst({
       where: {
+        // date: alterationInMenu.date,
         meal: alterationInMenu.meal
       }
     });
     expect(response.statusCode).toBe(200);
     expect(JSON.parse(response.text)).toBe('Alteração Salva com Sucesso');
+    // expect(String(menu.date) === alterationInMenu.date && menu.meal === alterationInMenu.meal).toBeTruthy();
     expect(menu.meal === alterationInMenu.meal).toBeTruthy();
   });
 });

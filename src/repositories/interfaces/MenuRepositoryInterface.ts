@@ -1,12 +1,12 @@
 import { Prisma } from '@prisma/client';
-import { Menu } from '../base/models/MenuModel';
+import { Menu, MsgAndMenu } from '../base/models/MenuModel';
 
 interface IMenuRepository {
-    add(newMenu: Menu): Promise<string>;
+    add(newMenu: Menu): Promise<MsgAndMenu>;
     getAll(): Promise<Menu[]>;
     selectOne( where: Prisma.MenuWhereInput): Promise<Menu>;
-    update({ meal, items, date }: Menu, id: number): Promise<string>;
-    delete(id: number): Promise<string>;
+    update({ meal, items, date }: Menu, id: number): Promise<MsgAndMenu>;
+    delete(id: number): Promise<MsgAndMenu>;
 }
 
 export default  IMenuRepository;

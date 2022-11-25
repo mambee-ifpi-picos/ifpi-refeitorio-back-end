@@ -4,7 +4,7 @@ export type Menu = {
     meal: string;
 };
 
-export type MsgEMenu = {
+export type MsgAndMenu = {
     menu: Menu;
     msg: string;
 }
