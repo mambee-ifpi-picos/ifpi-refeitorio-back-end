@@ -45,48 +45,48 @@ routes.post('/', async (req: Request, res: Response) => {
     } catch (error) {
       res.status(400).json(error.message);
     }
-  });
+});
 
-  routes.put('/:id', async (req: Request, res: Response) => {
-    try {
-      const { meal, items, date } = req.body;
-      const { id } = req.params;
-  
-      let convertedDate: Date | null;
-      if(date){
-        const smashDate = date.split('/');
+routes.put('/:id', async (req: Request, res: Response) => {
+  try {
+    const { meal, items, date } = req.body;
+    const { id } = req.params;
 
-        const day = smashDate[0];
-        const month = smashDate[1];
-        const year = smashDate[2];
+    let convertedDate: Date | null;
+    if(date){
+      const smashDate = date.split('/');
 
-        convertedDate = new Date( `${year}/${month}/${day}`);
-      }
-  
-      const changedMenuAndMessage = await menuService.updateMenu({ meal, items, date: convertedDate }, Number(id));
-      
-      const menu = [changedMenuAndMessage.menu.items, changedMenuAndMessage.menu.date, changedMenuAndMessage.menu.meal];
-      logger.info(`Operacao com sucesso: O usuario [email do usuario logado] alterou dados do cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`);
+      const day = smashDate[0];
+      const month = smashDate[1];
+      const year = smashDate[2];
 
-      return res.status(200).json(changedMenuAndMessage.msg);
-  
-    } catch (error) {
-      res.status(400).json(error.message);
+      convertedDate = new Date( `${year}/${month}/${day}`);
     }
-  });
-  
-  routes.delete('/:id', async ( req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-      const deletedMenuAndMessage = await menuService.deleteMenu( Number(id));
-      
-      const menu = [deletedMenuAndMessage.menu.items, deletedMenuAndMessage.menu.date, deletedMenuAndMessage.menu.meal];
-      logger.info(`Operacao com sucesso: O usuario [email do usuario logado] excluiu o cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`);
 
-      return res.status(200).json(deletedMenuAndMessage.msg);
-    } catch (error) {
-      res.status(400).json(error.message);
-    }
-  });
+    const changedMenuAndMessage = await menuService.updateMenu({ meal, items, date: convertedDate }, Number(id));
+    
+    const menu = [changedMenuAndMessage.menu.items, changedMenuAndMessage.menu.date, changedMenuAndMessage.menu.meal];
+    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] alterou dados do cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`);
+
+    return res.status(200).json(changedMenuAndMessage.msg);
+
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
+});
+
+routes.delete('/:id', async ( req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const deletedMenuAndMessage = await menuService.deleteMenu( Number(id));
+    
+    const menu = [deletedMenuAndMessage.menu.items, deletedMenuAndMessage.menu.date, deletedMenuAndMessage.menu.meal];
+    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] excluiu o cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`);
+
+    return res.status(200).json(deletedMenuAndMessage.msg);
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
+});
 
 export default routes;
