@@ -9,18 +9,15 @@ export default class MenuService implements IMenuServiceInterface {
     this.menuRepository = iMenuRepository;
   }
 
-  async addMenu({ items, date, meal }: Menu): Promise<MsgAndMenu> {
-
+  async addMenu({ items, day, meal }: Menu): Promise<MsgAndMenu> {
     if (meal !== 'almoço' && meal !== 'janta') throw new Error ('Preencha a refeição com "almoço" ou "janta".');
-    const existMealToSameDate = await this.menuRepository.selectOne({ date, meal });
+    const existMealToSameDate = await this.menuRepository.selectOne({ day, meal });
     if(existMealToSameDate) throw new Error ('Não é possível adicionar duas refeições para o mesmo horário no mesmo dia.');
-
     const createdMenuAndMessage = await this.menuRepository.add({
       items,
-      date,
+      day,
       meal,
     } as Menu);
-
     return createdMenuAndMessage;
   }
 
@@ -29,23 +26,17 @@ export default class MenuService implements IMenuServiceInterface {
     return menus;
   }
 
-  async updateMenu(menu: Menu, id: number): Promise<MsgAndMenu> {
+  async updateMenu({ items }: {items: string}, id: number): Promise<MsgAndMenu> {
     const userExist = await this.menuRepository.selectOne({ id });
-
     if(!userExist) throw new Error ('Menu não encontrado');
-
-    const changedMenuAndMessage = await this.menuRepository.update(menu, id);
-
+    const changedMenuAndMessage = await this.menuRepository.update({ items }, id);
     return changedMenuAndMessage;
   }
 
   async deleteMenu( id: number ): Promise<MsgAndMenu> {
     const menu = await this.menuRepository.selectOne({ id });
-
-    if(!menu) throw new Error( 'Menu não encontrado' );
-
+    if(!menu) throw new Error('Menu não encontrado');
     const deletedMenuAndMessage = await this.menuRepository.delete(id);
-
     return deletedMenuAndMessage;
   }
 }

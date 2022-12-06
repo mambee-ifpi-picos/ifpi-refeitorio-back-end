@@ -16,32 +16,23 @@ routes.get('/', async (req: Request, res: Response) => {
       logger.info('Operacao com sucesso: O usuario [email do usuario logado] consultou os cardapios.');
       return res.status(200).json(menus);
     } catch (error) {
-      return res.status(404).json(error);
+      logger.info('Operacao sem sucesso: O usuario [email do usuario logado] tentou consultar os cardapios.');
+      return res.status(404).json(error.message);
     }
 });
 
 routes.post('/', async (req: Request, res: Response) => {
     try {
-      const { items, date, meal } = req.body;
-      
-      if( !items || !date || !meal ) throw new Error('Preencha todos os campos obrigatórios!');
-      const smashDate = date.split('/');
-      
-      const day = smashDate[0];
-      const month = smashDate[1];
-      const year = smashDate[2];
-      const dateConvertido = new Date( `${year}/${month}/${day}`);
-  
+      const { items, day, meal } = req.body;
+      if( !day || !meal ) throw new Error('Preencha todos os campos obrigatórios!');
       const createdMenuAndMessage = await menuService.addMenu({
         items,
-        date: dateConvertido,
-        meal,
+        day,
+        meal
       } as Menu); 
-
-      const menu = [createdMenuAndMessage.menu.items, createdMenuAndMessage.menu.date, createdMenuAndMessage.menu.meal];
+      const menu = [createdMenuAndMessage.menu.items, createdMenuAndMessage.menu.day, createdMenuAndMessage.menu.meal];
       logger.info(`Operacao com sucesso: O usuario [email do usuario logado] registrou o cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`);
-
-      return res.status(201).json(createdMenuAndMessage.msg);
+      return res.status(201).json(createdMenuAndMessage);
     } catch (error) {
       res.status(400).json(error.message);
     }
@@ -49,27 +40,13 @@ routes.post('/', async (req: Request, res: Response) => {
 
 routes.put('/:id', async (req: Request, res: Response) => {
   try {
-    const { meal, items, date } = req.body;
+    const { items } = req.body;
+    // console.log(meal, items, day);
     const { id } = req.params;
-
-    let convertedDate: Date | null;
-    if(date){
-      const smashDate = date.split('/');
-
-      const day = smashDate[0];
-      const month = smashDate[1];
-      const year = smashDate[2];
-
-      convertedDate = new Date( `${year}/${month}/${day}`);
-    }
-
-    const changedMenuAndMessage = await menuService.updateMenu({ meal, items, date: convertedDate }, Number(id));
-    
-    const menu = [changedMenuAndMessage.menu.items, changedMenuAndMessage.menu.date, changedMenuAndMessage.menu.meal];
+    const changedMenuAndMessage = await menuService.updateMenu({ items }, Number(id));
+    const menu = [changedMenuAndMessage.menu.items, changedMenuAndMessage.menu.day, changedMenuAndMessage.menu.meal];
     logger.info(`Operacao com sucesso: O usuario [email do usuario logado] alterou dados do cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`);
-
-    return res.status(200).json(changedMenuAndMessage.msg);
-
+    return res.status(200).json(changedMenuAndMessage);
   } catch (error) {
     res.status(400).json(error.message);
   }
@@ -79,11 +56,9 @@ routes.delete('/:id', async ( req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const deletedMenuAndMessage = await menuService.deleteMenu( Number(id));
-    
-    const menu = [deletedMenuAndMessage.menu.items, deletedMenuAndMessage.menu.date, deletedMenuAndMessage.menu.meal];
+    const menu = [deletedMenuAndMessage.menu.items, deletedMenuAndMessage.menu.day, deletedMenuAndMessage.menu.meal];
     logger.info(`Operacao com sucesso: O usuario [email do usuario logado] excluiu o cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`);
-
-    return res.status(200).json(deletedMenuAndMessage.msg);
+    return res.status(200).json(deletedMenuAndMessage);
   } catch (error) {
     res.status(400).json(error.message);
   }

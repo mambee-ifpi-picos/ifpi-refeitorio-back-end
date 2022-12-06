@@ -9,9 +9,7 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
     const createdMenu = await super.getPrisma().menu.create({
       data: newMenu,
     });
-
-    const msg = 'Cadastro Salvo com Sucesso.';
-
+    const msg = 'Cadastro salvo com Sucesso.';
     return { msg, menu: createdMenu };
   }
 
@@ -19,26 +17,21 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
     return super.getPrisma().menu.findMany({});
   }
 
-  public async update({ meal, date, items }: Menu, id: number): Promise<MsgAndMenu> {
+  public async update({ items }: {items: string}, id: number): Promise<MsgAndMenu> {
     const changedMenu = await super.getPrisma().menu.update({
       where: {
-        id,
+        id
       },
       data: {
-        meal,
-        date,
-        items,
+        items
       } as Menu,
     });
-
-    const msg = 'Alteração Salva com Sucesso';
-
+    const msg = 'Alteração salva com Sucesso';
     return { msg, menu: changedMenu };
   }
 
   async selectOne( where: Prisma.MenuWhereInput): Promise<Menu> {
     const result = await super.getPrisma().menu.findFirst({ where });
-
     return result;
   }
 
@@ -48,7 +41,7 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
         id
       }
     });
-    const msg = 'Cardápio Removido com Sucesso';
+    const msg = 'Cardápio removido com Sucesso';
     return { msg, menu: deletedMenu };
   }
 }

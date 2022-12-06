@@ -16,98 +16,93 @@ afterAll(async () => {
   await prisma.$disconnect();
 });
 
-describe('POST menu', () => {
-  test('Create menu sucessfully', async () => {
-    const newMenu = {
-      date: '11/11/2011',
-      meal: 'janta',
-      items: 'arroz - carne - feijão - manga' 
-    };
-    const response = await request(app).post(API_MENU).send(newMenu);
-    const menu = await prisma.menu.findFirst({
-      where: {
-        meal: newMenu.meal
-      }
-    });
-    expect(response.statusCode).toBe(201);
-    expect(JSON.parse(response.text)).toBe('Cadastro Salvo com Sucesso.');
-    // expect(String(menu.date) === newMenu.date && menu.meal === newMenu.meal && menu.items === newMenu.items).toBeTruthy();
-    expect(menu.meal === newMenu.meal && menu.items === newMenu.items).toBeTruthy();
-  });
+jest.setTimeout(1000 * 60 * 2);
 
-  test('Create menu without all required fields', async () => {
-    const newMenu = {
-      date: '11/11/2011',
-      meal: 'janta'
-    };
-    const response = await request(app).post(API_MENU).send(newMenu);
-    expect(response.statusCode).toBe(400);
-    expect(JSON.parse(response.text)).toBe('Preencha todos os campos obrigatórios!');
-  });
-  
-  test('Create menu for the same day and meal', async () => {
-    const newMenu = {
-      date: '11/11/2011',
-      meal: 'janta',
-      items: 'arroz - carne - feijão - manga' 
-    };
-    const response = await request(app).post(API_MENU).send(newMenu);
-    expect(response.statusCode).toBe(400);
-    expect(JSON.parse(response.text)).toBe('Não é possível adicionar duas refeições para o mesmo horário no mesmo dia.');
+describe('POST menu', () => {
+  test('Create menus sucessfully', async () => {
+    const days = [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ];
+    // eslint-disable-next-line no-restricted-syntax
+    for(const day of days){
+      const meals = [ 'almoço', 'janta' ];
+      // eslint-disable-next-line no-restricted-syntax
+      for (const meal of meals) {
+        const newMenu = {
+          day,
+          meal,
+          items: 'arroz - carne - feijão - manga' 
+        };
+        // eslint-disable-next-line no-await-in-loop
+        const response = await request(app).post(API_MENU).send(newMenu);
+        // eslint-disable-next-line no-await-in-loop
+        expect(response.statusCode).toBe(201); 
+      } 
+    }
   });
 });
 
-let menuId: string;
+let menuId: number;
 describe('GET menu', () => {
   test('Request menus (200)', async () => {
     const response = await request(app).get(API_MENU);
     const menus = await prisma.menu.findMany();
-    menuId = String(menus[0].id);
+    menuId = menus[menus.length - 1].id;
     expect(response.statusCode).toBe(200);
-    expect(menus.length === 1);
+    expect(menus.length === 14);
   });
 });
 
 describe('PUT menu', () => {
   test('Alter menu nonexistent', async () => {
-    const response = await request(app).put(`${API_MENU}/${menuId + 1}`);
+    const response = await request(app).put(`${API_MENU}/${menuId + 11}`);
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.text)).toBe('Menu não encontrado');
   });
 
-  test('Alteration in menu', async () => {
+  test('Alteration in items of menu to void', async () => {
     const alterationInMenu = {
-      date: '22/11/2011',
-      meal: 'almoço'
+      items: ''
     };
     const response = await request(app).put(`${API_MENU}/${menuId}`).send(alterationInMenu);
     const menu = await prisma.menu.findFirst({
       where: {
-        // date: alterationInMenu.date,
-        meal: alterationInMenu.meal
+        items: alterationInMenu.items
       }
     });
     expect(response.statusCode).toBe(200);
-    expect(JSON.parse(response.text)).toBe('Alteração Salva com Sucesso');
-    // expect(String(menu.date) === alterationInMenu.date && menu.meal === alterationInMenu.meal).toBeTruthy();
-    expect(menu.meal === alterationInMenu.meal).toBeTruthy();
+    expect(JSON.parse(response.text).msg).toBe('Alteração salva com Sucesso');
+    expect(menu.items === alterationInMenu.items).toBeTruthy();
+  });
+
+  test('Alteration in menu', async () => {
+    const alterationInMenu = {
+      items: 'feijão, arroz, carne desfiada'
+    };
+    const response = await request(app).put(`${API_MENU}/${menuId}`).send(alterationInMenu);
+    const menu = await prisma.menu.findFirst({
+      where: {
+        items: alterationInMenu.items
+      }
+    });
+    expect(response.statusCode).toBe(200);
+    expect(JSON.parse(response.text).msg).toBe('Alteração salva com Sucesso');
+    expect(menu.items === alterationInMenu.items).toBeTruthy();
   });
 });
 
 describe('DELETE menu', () => {
   test('Delete menu nonexistent', async () => {
-    const response = await request(app).delete(`${API_MENU}/${menuId + 1}`);
+    const response = await request(app).delete(`${API_MENU}/${menuId + 11}`);
     const menus = await prisma.menu.findMany();
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.text)).toBe('Menu não encontrado');
-    expect(menus.length === 1).toBeTruthy();
+    expect(menus.length === 14).toBeTruthy();
   });  
 
   test('Delete menu successfully', async () => {
     const response = await request(app).delete(`${API_MENU}/${menuId}`);
     const menus = await prisma.menu.findMany();
     expect(response.statusCode).toBe(200);
-    expect(JSON.parse(response.text)).toBe('Cardápio Removido com Sucesso');
-    expect(menus.length === 0).toBeTruthy();
+    expect(JSON.parse(response.text).msg).toBe('Cardápio removido com Sucesso');
+    expect(menus.length === 13).toBeTruthy();
   });
 });
