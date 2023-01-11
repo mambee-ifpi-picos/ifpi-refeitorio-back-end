@@ -25,5 +25,13 @@ model Menu {
   meal String
   day Days
   items String
-  @@map("menu ")
+  @@map("menu")
+}
+
+model Items {
+  id Int @id @default(autoincrement())
+  name String @unique
+  creationDate DateTime
+  active Boolean @default(true)
+  @@map("items")
 }
