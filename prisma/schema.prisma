@@ -1,13 +1,28 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgres://refeitorio_q52e_user:Rq5VtDPR3ZcLQA2J6oRnrE18cVf27Yts@dpg-cev11dhgp3jjsh1c5ufg-a.oregon-postgres.render.com/refeitorio_q52e"
+}
+
+model Menu {
+  id    Int    @id @default(autoincrement())
+  meal  String
+  day   Days
+  items String
+
+  @@map("menu")
+}
+
+model Items {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  creationDate DateTime
+  active       Boolean  @default(true)
+
+  @@map("items")
 }
 
 enum Days {
@@ -18,20 +33,4 @@ enum Days {
   friday
   saturday
   sunday
-}
-
-model Menu {
-  id Int @id @default(autoincrement())
-  meal String
-  day Days
-  items String
-  @@map("menu")
-}
-
-model Items {
-  id Int @id @default(autoincrement())
-  name String @unique
-  creationDate DateTime
-  active Boolean @default(true)
-  @@map("items")
 }
