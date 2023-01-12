@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
 import pino from 'pino';
-import ItemsService from '../services/ItemsService';
-import IItemsServiceInterface from '../services/interfaces/ItemsServiceInterface';
+import verifyIfNotANumber from '../middleware/verifyIfNotANumber';
 import ItemsRepository from '../repositories/ItemsRepository';
 import { Item } from '../repositories/base/models/ItemModel';
-import verifyIfNotANumber from '../middleware/verifyIfNotANumber';
+import ItemsService from '../services/ItemsService';
+import IItemsServiceInterface from '../services/interfaces/ItemsServiceInterface';
 
 const routes = Router();
 const logger = pino();
@@ -15,17 +15,17 @@ routes.post('/', async (req: Request, res: Response) => {
       const { name, date } = req.body;
       if( !date || !name ) throw new Error('Preencha todos os campos obrigatórios!');
 
-      //changing the data structure
-      const smashDate = date.split("-");
+      // changing the data structure
+      const smashDate = date.split('-');
 
       const day = verifyIfNotANumber(smashDate[2]);
       const month = verifyIfNotANumber(smashDate[1]);
       const year = verifyIfNotANumber(smashDate[0]);
 
-      if (day > 31 || month > 12) throw new Error("Informe uma data válida.");
+      if (day > 31 || month > 12) throw new Error('Informe uma data válida.');
 
       const creationDate = new Date(`${year}/${month}/${day}`);
-      //changing the data structure - fim
+      // changing the data structure - fim
 
       const createdItemAndMessage = await itemService.addItem({
         name,
@@ -38,7 +38,7 @@ routes.post('/', async (req: Request, res: Response) => {
       
       return res.status(201).json(createdItemAndMessage);
     } catch (error) {
-      res.status(400).json(error.message);
+      return res.status(400).json(error.message);
     }
 });
 

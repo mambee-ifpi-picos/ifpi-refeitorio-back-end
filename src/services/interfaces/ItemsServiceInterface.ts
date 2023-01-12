@@ -1,4 +1,4 @@
-import { Item, MsgAndItem } from "../../repositories/base/models/ItemModel";
+import { Item, MsgAndItem } from '../../repositories/base/models/ItemModel';
 
 
 interface IItemsServiceInterface {

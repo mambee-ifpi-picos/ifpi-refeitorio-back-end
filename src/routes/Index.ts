@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import menuRoutes from './Menu';
 import itemsRoutes from './Items';
+import menuRoutes from './Menu';
 
 const routes = Router();
 

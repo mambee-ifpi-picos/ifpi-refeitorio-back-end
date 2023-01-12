@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client';
 import  BaseRepository  from './base/BaseRepository';
 import { Item, MsgAndItem } from './base/models/ItemModel';
 import IItemsRepositoryInterface from './interfaces/ItemsRepositoryInterface';

@@ -1,4 +1,4 @@
-import { Item, MsgAndItem } from "../base/models/ItemModel";
+import { Item, MsgAndItem } from '../base/models/ItemModel';
 
 interface IItemsRepository {
     add(newItem: Item): Promise<MsgAndItem>;

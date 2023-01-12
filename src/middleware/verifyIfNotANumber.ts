@@ -1,10 +1,10 @@
 
 export default function verifyIfNotANumber(param: string): number {
-    const number = Number(param)
+    const number = Number(param);
 
     if (!number) {
-        throw new Error("Algum campo inválido!");
+        throw new Error('Algum campo inválido!');
     }
     
-    return number
+    return number;
 }
