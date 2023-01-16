@@ -1,8 +1,8 @@
 import express from 'express';
 import helmet from 'helmet';
-import routes from './routes/Index';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocs from './swagger.json'
+import routes from './routes/Index';
+import swaggerDocs from './swagger.json';
 
 // criação de uma instância do express/servidor http
 const app = express();
