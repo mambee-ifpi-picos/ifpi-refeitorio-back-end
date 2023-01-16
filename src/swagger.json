@@ -1,0 +1,108 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Refeitório",
+        "description": "Essa API serve para o agendamento das refeições do Instituto Federal do Piauí campus Picos(Usuário: aluno). Como também para um controle dos agendamentos(Usuário: adiministrador).",
+        "termsOfService": "#",
+        "contact": {
+            "email": "capic.2021118tads0033@gmaiul.com"
+        },
+        "version": "1.0.0"
+    },
+    "serves": [
+        {
+            "url": "http://localhost:3000",
+            "description": "API de produção"
+        }
+    ],
+    "paths": {
+        "/menu": {
+            "post": {
+                "summary": "Cadastro de cardápio",
+                "description": "Essa rote será responsável por cadastrar um novo cardápio.",
+                "tags": ["menu"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/menu"
+                            }
+                        },
+                        "examples": {
+                            "menu": {
+                                "value": {
+                                    "items": "[{name: Arroz, creationDate: 2023-12-20}, {name: Feijão, creationDate: 2023-09-12}] as Items[]",
+                                    "date": "2023-12-30",
+                                    "meal": "Janta"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/menu"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao cadastrar"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "menu": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/items"
+                        },
+                        "type": "array" 
+                    },
+                    "date": {
+                        "type": "string"
+                    },
+                    "meal": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "number"
+                    },
+                    "state": {
+                        "type": "boolean"
+                    },
+                    "descriptionState": {
+                        "type": "string"
+                    }
+                }
+            },
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "creationDate": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "number"
+                    },
+                    "active": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        }
+    } 
+}
