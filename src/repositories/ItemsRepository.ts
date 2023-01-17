@@ -14,7 +14,11 @@ export default class ItemsRepository extends BaseRepository implements IItemsRep
   }
 
   public async getAll(): Promise<Item[]> {
-    return super.getPrisma().items.findMany({});
+    return super.getPrisma().items.findMany({
+      where: {
+        active: true,
+      },
+    });
   }
 
   public async selectOne( where: Prisma.ItemsWhereInput ): Promise<Item> {
