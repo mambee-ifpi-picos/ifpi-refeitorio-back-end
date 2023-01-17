@@ -25,6 +25,8 @@ model Menu {
   meal String
   day Days
   items String
+  state Boolean @default(true)
+  description String?
   @@map("menu")
 }
 
