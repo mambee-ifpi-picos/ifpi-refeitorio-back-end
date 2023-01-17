@@ -11,4 +11,8 @@ export default class ItemsRepository extends BaseRepository implements IItemsRep
     const msg = 'Cadastro salvo com Sucesso.';
     return { msg, item: createdItem };
   }
+
+  public async getAll(): Promise<Item[]> {
+    return super.getPrisma().items.findMany({});
+  }
 }

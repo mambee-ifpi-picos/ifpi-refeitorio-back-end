@@ -42,4 +42,15 @@ routes.post('/', async (req: Request, res: Response) => {
     }
 });
 
+routes.get('/', async (req: Request, res: Response) => {
+  try {
+    const items = await itemService.getAll();
+    logger.info('Operacao com sucesso: O usuario [email do usuario logado] consultou os itens.');
+    return res.status(200).json(items);
+  } catch (error) {
+    logger.info('Operacao sem sucesso: O usuario [email do usuario logado] tentou consultar os itens.');
+    return res.status(404).json(error.message);
+  }
+});
+
 export default routes;

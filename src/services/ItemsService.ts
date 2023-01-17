@@ -16,4 +16,9 @@ export default class ItemsService implements IItemsServiceInterface {
     } as Item);
     return createdtemAndMessage;
   }
+
+  async getAll(): Promise<Item[]> {
+    const items = await this.itemRepository.getAll();
+    return items;
+  }
 }
