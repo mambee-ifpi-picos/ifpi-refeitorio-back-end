@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import  BaseRepository  from './base/BaseRepository';
 import { Item, MsgAndItem } from './base/models/ItemModel';
 import IItemsRepositoryInterface from './interfaces/ItemsRepositoryInterface';
@@ -14,5 +15,22 @@ export default class ItemsRepository extends BaseRepository implements IItemsRep
 
   public async getAll(): Promise<Item[]> {
     return super.getPrisma().items.findMany({});
+  }
+
+  public async selectOne( where: Prisma.ItemsWhereInput ): Promise<Item> {
+    const result = await super.getPrisma().items.findFirst({ where });
+    return result;
+  }
+
+  public async delete( id: number ): Promise<MsgAndItem> {
+    const deletedItem = await super.getPrisma().items.delete({
+      where: {
+        id,
+      },
+    });
+
+    const msg = 'Item deletado com sucesso.';
+
+    return { msg, item: deletedItem };
   }
 }
