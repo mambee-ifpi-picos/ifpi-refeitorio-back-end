@@ -53,4 +53,15 @@ routes.get('/', async (req: Request, res: Response) => {
   }
 });
 
+routes.delete('/:id', async ( req: Request, res: Response ) => {
+  try{
+    const { id } = req.params;
+    const deletedItemAndMessage = await itemService.deleteItem( Number(id) );
+    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] excluiu o item [${deletedItemAndMessage}].`);
+    return res.status(200).json(deletedItemAndMessage);
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+});
+
 export default routes;

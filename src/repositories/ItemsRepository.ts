@@ -23,9 +23,12 @@ export default class ItemsRepository extends BaseRepository implements IItemsRep
   }
 
   public async delete( id: number ): Promise<MsgAndItem> {
-    const deletedItem = await super.getPrisma().items.delete({
+    const deletedItem = await super.getPrisma().items.update({
       where: {
         id,
+      },
+      data: {
+        active: false,
       },
     });
 

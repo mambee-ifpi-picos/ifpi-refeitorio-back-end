@@ -21,4 +21,11 @@ export default class ItemsService implements IItemsServiceInterface {
     const items = await this.itemRepository.getAll();
     return items;
   }
+
+  async deleteItem( id: number ): Promise<MsgAndItem> {
+    const item = await this.itemRepository.selectOne({ id });
+    if (!item) throw new Error('Item não encontrado.');
+    const deleteditemAndMessage = await this.itemRepository.delete(id);
+    return deleteditemAndMessage;
+  }
 }
