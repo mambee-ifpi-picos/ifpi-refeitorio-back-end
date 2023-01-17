@@ -24,7 +24,7 @@ model Menu {
   id Int @id @default(autoincrement())
   meal String
   day Days
-  items String
+  items String?
   state Boolean @default(true)
   description String?
   @@map("menu")
