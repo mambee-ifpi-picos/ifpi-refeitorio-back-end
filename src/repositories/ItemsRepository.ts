@@ -40,4 +40,19 @@ export default class ItemsRepository extends BaseRepository implements IItemsRep
 
     return { msg, item: deletedItem };
   }
+
+  public async update( id: number, name: string ): Promise<MsgAndItem> {
+    const updatedItem = await super.getPrisma().items.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+      },
+    });
+
+    const msg = 'O nome do item foi atualizado com sucesso.';
+
+    return { msg, item: updatedItem };
+  }
 }

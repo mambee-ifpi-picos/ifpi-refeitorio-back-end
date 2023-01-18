@@ -5,6 +5,7 @@ interface IItemsServiceInterface {
     addItem({ creationDate, name }: Item ): Promise<MsgAndItem>;
     getAll(): Promise<Item[]>;
     deleteItem( id: number ): Promise<MsgAndItem>;
+    updateItem( id: number, name: string ): Promise<MsgAndItem>;
 }
 
 export default IItemsServiceInterface;

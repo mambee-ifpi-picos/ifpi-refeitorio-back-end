@@ -6,6 +6,7 @@ interface IItemsRepository {
     getAll(): Promise<Item[]>;
     selectOne( where: Prisma.ItemsWhereInput ): Promise<Item>;
     delete( id: number): Promise<MsgAndItem>;
+    update( id: number, name: string ): Promise<MsgAndItem>;
 }
 
 export default IItemsRepository;
