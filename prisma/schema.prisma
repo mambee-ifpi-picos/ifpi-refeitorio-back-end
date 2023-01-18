@@ -33,7 +33,7 @@ model Menu {
 model Items {
   id Int @id @default(autoincrement())
   name String @unique
-  creationDate DateTime
+  creationDate DateTime @default(now())
   active Boolean @default(true)
   @@map("items")
 }

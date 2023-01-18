@@ -9,10 +9,9 @@ export default class ItemsService implements IItemsServiceInterface {
     this.itemRepository = iItemsRepository;
   }
 
-  async addItem({ name, creationDate }: Item): Promise<MsgAndItem> {
+  async addItem({ name }: Item): Promise<MsgAndItem> {
     const createdtemAndMessage = await this.itemRepository.add({
-      name,
-      creationDate,
+      name
     } as Item);
     return createdtemAndMessage;
   }

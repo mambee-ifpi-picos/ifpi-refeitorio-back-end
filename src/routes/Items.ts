@@ -12,24 +12,11 @@ const itemService: IItemsServiceInterface = new ItemsService(new ItemsRepository
 
 routes.post('/', async (req: Request, res: Response) => {
     try {
-      const { name, date } = req.body;
-      if( !date || !name ) throw new Error('Preencha todos os campos obrigatórios!');
-
-      // changing the data structure
-      const smashDate = date.split('-');
-
-      const day = verifyIfNotANumber(smashDate[2]);
-      const month = verifyIfNotANumber(smashDate[1]);
-      const year = verifyIfNotANumber(smashDate[0]);
-
-      if (day > 31 || month > 12) throw new Error('Informe uma data válida.');
-
-      const creationDate = new Date(`${year}/${month}/${day}`);
-      // changing the data structure - fim
+      const { name } = req.body;
+      if( !name ) throw new Error('Preencha todos os campos obrigatórios!');
 
       const createdItemAndMessage = await itemService.addItem({
-        name,
-        creationDate,
+        name
       } as Item); 
 
       const item = [createdItemAndMessage.item.name, createdItemAndMessage.item.creationDate];

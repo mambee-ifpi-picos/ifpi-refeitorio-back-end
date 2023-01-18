@@ -1,5 +1,6 @@
 import express from 'express';
 import helmet from 'helmet';
+import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import routes from './routes/Index';
 import swaggerDocs from './swagger.json';
@@ -7,6 +8,8 @@ import swaggerDocs from './swagger.json';
 // criação de uma instância do express/servidor http
 const app = express();
 app.use(helmet()); // https://helmetjs.github.io/
+
+app.use(cors());
 
 // middleware para converter o body das requisições para json
 app.use(express.json());

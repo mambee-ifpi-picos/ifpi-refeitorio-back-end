@@ -1,6 +1,6 @@
 export type Item = {
     name: string;
-    creationDate: Date;
+    creationDate?: Date;
     active?: boolean;
     id?: number;
 }
