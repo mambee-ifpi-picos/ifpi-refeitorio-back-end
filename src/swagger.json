@@ -18,14 +18,14 @@
     "paths": {
         "/menu": {
             "post": {
-                "summary": "Cadastro de cardápio",
-                "description": "Essa rote será responsável por cadastrar um novo cardápio.",
+                "summary": "Cadastrar cardápio",
+                "description": "Essa rota é responsável por cadastrar um novo cardápio.",
                 "tags": ["menu"],
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/menu"
+                                "$ref": "#/components/schemas/menuWithoutStatusAndId"
                             }
                         },
                         "examples": {
@@ -41,18 +41,89 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "",
+                        "description": "Ok",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
-                                    "$ref": "#/components/schemas/menu"
+                                    "$ref": "#/components/schemas/menuWithoutStatusAndId"
                                 }
                             }
                         }
                     },
                     "400": {
                         "description": "Erro ao cadastrar"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Buscar cardápios.",
+                "description": "Essa rota é responsável por buscar os cardápios.",
+                "tags": ["menu"],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/menu"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao buscar lista de cardápios."
+                    }
+                }
+            }
+        },
+        "menu/{id}": {
+            "put": {
+                "description": "Essa rota é responsável por alterar um cardápio.",
+                "summary": "Alterar cardápio.",
+                "tags": ["menu"],
+                "parameters": {
+                    "name": "id",
+                    "in": "path",
+                    "required": true
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/menuWithoutStatusAndId"
+                            }
+                        },
+                        "examples": {
+                            "menu": {
+                                "value": {
+                                    "items": "[{name: Arroz, creationDate: 2023-12-20}, {name: Feijão, creationDate: 2023-09-12}] as Items[]",
+                                    "date": "2023-12-30",
+                                    "meal": "Janta"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/changedMenuAndMessage"
+                                    }
+                                    
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao alterar cardápio."
                     }
                 }
             }
@@ -86,6 +157,39 @@
                     }
                 }
             },
+            "menuWithoutStatusAndId": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/itemsWithoutActiveAndId"
+                        },
+                        "type": "array" 
+                    },
+                    "date": {
+                        "type": "string"
+                    },
+                    "meal": {
+                        "type": "string"
+                    },
+                    "descriptionState": {
+                        "type": "string"
+                    }
+                }
+            },
+            "changedMenuAndMessage": {
+                "type": "object",
+                "properties": {
+                    "menu": {
+                        "items": {
+                            "$ref": "#/components/schemas/menu"
+                        }
+                    },
+                    "msg": {
+                        "type": "string"
+                    }
+                }
+            },
             "items": {
                 "type": "object",
                 "properties": {
@@ -100,6 +204,17 @@
                     },
                     "active": {
                         "type": "boolean"
+                    }
+                }
+            },
+            "itemsWithoutActiveAndId": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "creationDate": {
+                        "type": "string"
                     }
                 }
             }

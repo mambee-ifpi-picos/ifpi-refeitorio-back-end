@@ -1,6 +1,6 @@
+import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import routes from './routes/Index';
 import swaggerDocs from './swagger.json';
@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // documentação com o swagger 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // middleware de tratamento de todas as rotas
 app.use('/', routes);
