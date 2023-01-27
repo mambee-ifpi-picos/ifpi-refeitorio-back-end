@@ -85,11 +85,13 @@
                 "description": "Essa rota é responsável por alterar um cardápio.",
                 "summary": "Alterar cardápio.",
                 "tags": ["menu"],
-                "parameters": {
-                    "name": "id",
-                    "in": "path",
-                    "required": true
-                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -114,16 +116,42 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "items": {
-                                        "$ref": "#/components/schemas/changedMenuAndMessage"
-                                    }
-                                    
+                                    "$ref": "#/components/schemas/changedMenuAndMessage"
                                 }
                             }
                         }
                     },
                     "400": {
                         "description": "Erro ao alterar cardápio."
+                    }
+                }
+            },
+            "delete": {
+                "description": "Essa rota é responsável por deletar um cardápio.",
+                "summary": "Deletar cardápio.",
+                "tags": ["menu"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "msg": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao deletar cardápio."
                     }
                 }
             }
@@ -141,7 +169,8 @@
                         "type": "array" 
                     },
                     "date": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "meal": {
                         "type": "string"
@@ -167,7 +196,8 @@
                         "type": "array" 
                     },
                     "date": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "meal": {
                         "type": "string"
@@ -181,9 +211,7 @@
                 "type": "object",
                 "properties": {
                     "menu": {
-                        "items": {
-                            "$ref": "#/components/schemas/menu"
-                        }
+                        "$ref": "#/components/schemas/menu"
                     },
                     "msg": {
                         "type": "string"
@@ -197,7 +225,8 @@
                         "type": "string"
                     },
                     "creationDate": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "id": {
                         "type": "number"
@@ -214,7 +243,8 @@
                         "type": "string"
                     },
                     "creationDate": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             }

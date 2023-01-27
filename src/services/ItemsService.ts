@@ -10,10 +10,27 @@ export default class ItemsService implements IItemsServiceInterface {
   }
 
   async addItem({ name }: Item): Promise<MsgAndItem> {
-    const createdtemAndMessage = await this.itemRepository.add({
-      name
-    } as Item);
-    return createdtemAndMessage;
+
+    const itemExist = await this.itemRepository.selectOne({ name });
+
+    let createdItemAndMessage: MsgAndItem | null;
+    if(itemExist) {
+      if(itemExist.active === true) throw new Error('Já existe um item com esse nome.');
+
+      const { item } = await this.itemRepository.update({ id: itemExist.id, name, active: true });
+
+      const msg = 'Cadastro salvo com Sucesso.';
+
+      createdItemAndMessage = { msg, item };
+
+    } else {
+      createdItemAndMessage = await this.itemRepository.add({
+        name
+      } as Item);
+
+    }
+
+    return createdItemAndMessage;
   }
 
   async getAll(): Promise<Item[]> {
@@ -29,9 +46,8 @@ export default class ItemsService implements IItemsServiceInterface {
   }
 
   async updateItem( id: number, name: string ): Promise<MsgAndItem> {
-    const updatedItemAndMessage = await this.itemRepository.update( id, name );
-    if (!updatedItemAndMessage) throw new Error('Item não encontrado.');
-    if (updatedItemAndMessage.item.active === false) throw new Error('Item não encontrado.');
+    const updatedItemAndMessage = await this.itemRepository.update({ id, name });
+    if (!updatedItemAndMessage || updatedItemAndMessage.item.active === false) throw new Error('Item não encontrado.');
     return updatedItemAndMessage;
   }
 }
