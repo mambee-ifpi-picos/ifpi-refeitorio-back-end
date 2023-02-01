@@ -10,10 +10,10 @@ datasource db {
 model Menu {
   id          Int     @id @default(autoincrement())
   meal        String
-  day         Days
-  items       String?
+  date        String
   description String?
   state       Boolean @default(true)
+  items       Items[]
 
   @@map("menu")
 }
@@ -23,16 +23,7 @@ model Items {
   name         String   @unique
   creationDate DateTime @default(now())
   active       Boolean  @default(true)
-
+  menus        Menu[]
+ 
   @@map("items")
-}
-
-enum Days {
-  monday
-  tuesday
-  wednesday
-  thursday
-  friday
-  saturday
-  sunday
 }

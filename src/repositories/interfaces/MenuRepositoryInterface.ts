@@ -1,11 +1,11 @@
-import { Prisma } from '@prisma/client';
-import { Menu, MsgAndMenu } from '../base/models/MenuModel';
+import { Menu, Prisma } from '@prisma/client';
+import { newMenu, MsgAndMenu } from '../base/models/MenuModel';
 
 interface IMenuRepository {
-    add(newMenu: Menu): Promise<MsgAndMenu>;
+    add(infosNewMenu: newMenu): Promise<MsgAndMenu>;
     getAll(): Promise<Menu[]>;
-    selectOne( where: Prisma.MenuWhereInput): Promise<Menu>;
-    update({ items }: { items: string }, id: number): Promise<MsgAndMenu>;
+    selectOne(where: Prisma.MenuWhereInput): Promise<Menu>;
+    update(items: {id: number}[], id: number): Promise<MsgAndMenu>;
     delete(id: number): Promise<MsgAndMenu>;
 }
 

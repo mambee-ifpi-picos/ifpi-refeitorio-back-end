@@ -1,8 +1,8 @@
-import { Days } from '@prisma/client';
+import { Menu } from '@prisma/client';
 
-export type Menu = {
-    items: string;
-    day: Days;
+export type IMenu = {
+    items?: number[];
+    date: string;
     meal: string;
 };
 
@@ -10,3 +10,10 @@ export type MsgAndMenu = {
     menu: Menu;
     msg: string;
 }
+
+export type newMenu = {
+    items: {id: number}[],
+    date: string,
+    meal: string
+}
+
