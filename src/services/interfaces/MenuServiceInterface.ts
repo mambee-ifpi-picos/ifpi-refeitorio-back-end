@@ -1,8 +1,8 @@
-import { IMenu, MsgAndMenu } from '../../repositories/base/models/MenuModel';
+import { IMenu, MenuFilter, MsgAndMenu } from '../../repositories/base/models/MenuModel';
 
 interface IMenuServiceInterface {
     addMenu({ items, date, meal }: IMenu): Promise<MsgAndMenu>;
-    getAll(): Promise<IMenu[]>;
+    getAll(data: MenuFilter): Promise<IMenu[]>;
     updateMenu(items: number[], id: number): Promise<MsgAndMenu>;
     deleteMenu(id: number): Promise<MsgAndMenu>;
 }

@@ -1,6 +1,6 @@
 import { Prisma, Menu } from '@prisma/client';
 import  BaseRepository  from './base/BaseRepository';
-import { MsgAndMenu, newMenu } from './base/models/MenuModel';
+import { MenuFilter, MsgAndMenu, newMenu } from './base/models/MenuModel';
 import IMenuRepository from './interfaces/MenuRepositoryInterface';
 
 export default class MenuRepository extends BaseRepository implements IMenuRepository {
@@ -19,10 +19,11 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
     return { msg, menu: createdMenu };
   }
 
-  public async getAll(): Promise<Menu[]> {
+  public async getAll(data: MenuFilter): Promise<Menu[]> {
     return super.getPrisma().menu.findMany({
       where: {
-        state: true
+        state: true,
+        // date: data.initialDate between data.finalDate
       },
       include: {
         items: true

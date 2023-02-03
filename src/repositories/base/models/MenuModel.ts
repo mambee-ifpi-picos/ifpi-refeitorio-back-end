@@ -6,6 +6,15 @@ export type IMenu = {
     meal: string;
 };
 
+export type MenuFilter = {
+    id?: number;
+    meal?: 'janta' | 'almoço'
+    convertedInitialDate?: Date;
+    convertedFinalDate?: Date;
+    description?: string;
+    state?: boolean;
+}
+
 export type MsgAndMenu = {
     menu: Menu;
     msg: string;
@@ -16,4 +25,3 @@ export type newMenu = {
     date: string,
     meal: string
 }
-

@@ -1,5 +1,5 @@
 import { Menu } from '@prisma/client';
-import { IMenu, MsgAndMenu, newMenu } from '../repositories/base/models/MenuModel';
+import { IMenu, MenuFilter, MsgAndMenu, newMenu } from '../repositories/base/models/MenuModel';
 import IMenuRepository from '../repositories/interfaces/MenuRepositoryInterface';
 import IMenuServiceInterface from './interfaces/MenuServiceInterface';
 
@@ -23,8 +23,8 @@ export default class MenuService implements IMenuServiceInterface {
     return createdMenuAndMessage;
   }
 
-  async getAll(): Promise<IMenu[]> {
-    const menus: Menu[] = await this.menuRepository.getAll();
+  async getAll(data: MenuFilter): Promise<IMenu[]> {
+    const menus: Menu[] = await this.menuRepository.getAll(data);
     return menus;
   }
 
