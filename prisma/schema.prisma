@@ -13,7 +13,7 @@ model Menu {
   date        String
   description String?
   state       Boolean @default(true)
-  items       Items[]
+  items       Items[] @relation("ItemsToMenu")
 
   @@map("menu")
 }
@@ -23,7 +23,7 @@ model Items {
   name         String   @unique
   creationDate DateTime @default(now())
   active       Boolean  @default(true)
-  menus        Menu[]
- 
+  menus        Menu[]   @relation("ItemsToMenu")
+
   @@map("items")
 }
