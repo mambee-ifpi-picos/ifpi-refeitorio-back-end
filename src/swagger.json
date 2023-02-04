@@ -25,15 +25,15 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/menuWithoutStatusAndId"
-                            }
-                        },
-                        "examples": {
-                            "menu": {
-                                "value": {
-                                    "items": "[{name: Arroz, creationDate: 2023-12-20}, {name: Feijão, creationDate: 2023-09-12}] as Items[]",
-                                    "date": "2023-12-30",
-                                    "meal": "Janta"
+                                "$ref": "#/components/schemas/menuPostAndPutBody"
+                            },
+                            "examples": {
+                                "menu": {
+                                    "value": {
+                                        "items": [1, 2, 3, 4],
+                                        "date": "2023-12-30",
+                                        "meal": "janta"
+                                    }
                                 }
                             }
                         }
@@ -46,7 +46,7 @@
                             "application/json": {
                                 "schema": {
                                     "type": "object",
-                                    "$ref": "#/components/schemas/menuWithoutStatusAndId"
+                                    "$ref": "#/components/schemas/menuPostAndPutBody"
                                 }
                             }
                         }
@@ -96,15 +96,15 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/menuWithoutStatusAndId"
-                            }
-                        },
-                        "examples": {
-                            "menu": {
-                                "value": {
-                                    "items": "[{name: Arroz, creationDate: 2023-12-20}, {name: Feijão, creationDate: 2023-09-12}] as Items[]",
-                                    "date": "2023-12-30",
-                                    "meal": "Janta"
+                                "$ref": "#/components/schemas/menuPostAndPutBody"
+                            },
+                            "examples": {
+                                "menu": {
+                                    "value": {
+                                        "items": [1, 2, 3, 4],
+                                        "date": "2023-12-30",
+                                        "meal": "janta"
+                                    }
                                 }
                             }
                         }
@@ -173,6 +173,7 @@
                         "format": "date-time"
                     },
                     "meal": {
+                        "enum": ["'almoço'", "'janta'"],
                         "type": "string"
                     },
                     "id": {
@@ -186,12 +187,12 @@
                     }
                 }
             },
-            "menuWithoutStatusAndId": {
+            "menuPostAndPutBody": {
                 "type": "object",
                 "properties": {
                     "items": {
                         "items": {
-                            "$ref": "#/components/schemas/itemsWithoutActiveAndId"
+                            "type": "number"
                         },
                         "type": "array" 
                     },
@@ -200,10 +201,12 @@
                         "format": "date-time"
                     },
                     "meal": {
+                        "enum": ["'almoço'", "'janta'"],
                         "type": "string"
                     },
                     "descriptionState": {
-                        "type": "string"
+                        "type": "string",
+                        "required": false
                     }
                 }
             },
@@ -224,7 +227,7 @@
                     "name": {
                         "type": "string"
                     },
-                    "creationDate": {
+                    "createdAt": {
                         "type": "string",
                         "format": "date-time"
                     },
@@ -233,18 +236,6 @@
                     },
                     "active": {
                         "type": "boolean"
-                    }
-                }
-            },
-            "itemsWithoutActiveAndId": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "creationDate": {
-                        "type": "string",
-                        "format": "date-time"
                     }
                 }
             }

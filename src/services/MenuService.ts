@@ -13,7 +13,7 @@ export default class MenuService implements IMenuServiceInterface {
   async addMenu({ items, date, meal }: IMenu): Promise<MsgAndMenu> {
     if (meal !== 'almoço' && meal !== 'janta') throw new Error ('Preencha a refeição com "almoço" ou "janta".');
     const existMealToSameDate: IMenu = await this.menuRepository.selectOne({ date, meal });
-    if(existMealToSameDate) throw new Error ('Não é possível adicionar duas refeições para o mesmo horário no mesmo dia.');
+    if(existMealToSameDate) throw new Error (`Já existe um cardápio cadastrado para o(a) ${meal} da data informada.`);
     const listObjectIdItems: {id: number}[] = items?.map((item) => ({ id: item }));
     const createdMenuAndMessage: MsgAndMenu = await this.menuRepository.add({
       items: listObjectIdItems,

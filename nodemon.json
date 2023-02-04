@@ -6,7 +6,8 @@
       "node_modules"
     ],
     "watch": [
-      "src/**/*"
+      "src/**/*",
+      "src/swagger.json"
     ],
     "ext": "ts",
     "exec": "ts-node ./src/server.ts"
