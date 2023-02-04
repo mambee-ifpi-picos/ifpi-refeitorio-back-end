@@ -20,7 +20,7 @@ routes.get('/', async (req: Request, res: Response) => {
       let convertedFinalDate: Date | null;
       if (initialDate && finalDate) {
         const stringInitialDate = String(initialDate);
-        const stringFinalDate = String(initialDate);
+        const stringFinalDate = String(finalDate);
         const smashInitialDate = stringInitialDate.split('-');
         const smashFinalDate = stringFinalDate.split('-');
 
@@ -36,8 +36,8 @@ routes.get('/', async (req: Request, res: Response) => {
         convertedInitialDate = new Date(`${initialYear}/${initialMonth}/${initialDay}`);
         convertedFinalDate = new Date(`${finalYear}/${finalMonth}/${finalDay}`);
       }
-      // mudar nome do metodo
-      const menus: IMenu[] = await menuService.getAll({
+
+      const menus: IMenu[] = await menuService.getMany({
         ...(convertedInitialDate && { convertedInitialDate }),
         ...(convertedFinalDate && { convertedFinalDate }),
       });
@@ -54,9 +54,21 @@ routes.post('/', async (req: Request, res: Response) => {
     try {
       const { items, date, meal }: IMenu = req.body;
       if( !date || !meal ) throw new Error('Preencha todos os campos obrigatórios!');
+
+      const stringDate = String(date);
+      const smashDate = stringDate.split('-');
+
+      const day = verifyIfNotANumber(smashDate[2]);
+      const month = verifyIfNotANumber(smashDate[1]);
+      const year = verifyIfNotANumber(smashDate[0]);
+
+      if (day > 31 || month > 12) throw new Error('Informe uma data válida.');
+
+      const convertedDate = new Date(`${year}/${month}/${day}`);
+      
       const createdMenuAndMessage = await menuService.addMenu({
         items,
-        date,
+        date: convertedDate,
         meal
       } as IMenu); 
       // const menu = [createdMenuAndMessage.menu.items, createdMenuAndMessage.menu.date, createdMenuAndMessage.menu.meal];

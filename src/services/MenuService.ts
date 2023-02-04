@@ -23,8 +23,8 @@ export default class MenuService implements IMenuServiceInterface {
     return createdMenuAndMessage;
   }
 
-  async getAll(data: MenuFilter): Promise<IMenu[]> {
-    const menus: Menu[] = await this.menuRepository.getAll(data);
+  async getMany(data: MenuFilter): Promise<IMenu[]> {
+    const menus: Menu[] = await this.menuRepository.getMany(data);
     return menus;
   }
 

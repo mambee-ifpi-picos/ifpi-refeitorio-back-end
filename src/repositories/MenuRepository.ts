@@ -19,11 +19,14 @@ export default class MenuRepository extends BaseRepository implements IMenuRepos
     return { msg, menu: createdMenu };
   }
 
-  public async getAll(data: MenuFilter): Promise<Menu[]> {
+  public async getMany(data: MenuFilter): Promise<Menu[]> {
     return super.getPrisma().menu.findMany({
       where: {
         state: true,
-        // date: data.initialDate between data.finalDate
+        date: {
+          lte: data.convertedFinalDate,
+          gte: data.convertedInitialDate,
+        },
       },
       include: {
         items: true

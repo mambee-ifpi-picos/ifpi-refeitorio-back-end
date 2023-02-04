@@ -8,22 +8,22 @@ datasource db {
 }
 
 model Menu {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   meal        String
-  date        String
   description String?
-  state       Boolean @default(true)
-  items       Items[] @relation("ItemsToMenu")
+  state       Boolean  @default(true)
+  date        DateTime
+  items       Items[]  @relation("ItemsToMenu")
 
   @@map("menu")
 }
 
 model Items {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique
-  creationDate DateTime @default(now())
-  active       Boolean  @default(true)
-  menus        Menu[]   @relation("ItemsToMenu")
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  menus     Menu[]   @relation("ItemsToMenu")
 
   @@map("items")
 }

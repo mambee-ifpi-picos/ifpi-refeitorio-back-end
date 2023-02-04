@@ -2,7 +2,7 @@ import { Menu } from '@prisma/client';
 
 export type IMenu = {
     items?: number[];
-    date: string;
+    date: Date;
     meal: string;
 };
 
@@ -22,6 +22,6 @@ export type MsgAndMenu = {
 
 export type newMenu = {
     items: {id: number}[],
-    date: string,
+    date: Date,
     meal: string
 }
