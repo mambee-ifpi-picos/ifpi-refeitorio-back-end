@@ -20,7 +20,7 @@
             "post": {
                 "summary": "Cadastrar cardápio",
                 "description": "Essa rota é responsável por cadastrar um novo cardápio.",
-                "tags": ["menu"],
+                "tags": ["Menu"],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -59,7 +59,7 @@
             "get": {
                 "summary": "Buscar cardápios.",
                 "description": "Essa rota é responsável por buscar os cardápios.",
-                "tags": ["menu"],
+                "tags": ["Menu"],
                 "responses": {
                     "200": {
                         "description": "Ok",
@@ -84,7 +84,7 @@
             "put": {
                 "description": "Essa rota é responsável por alterar um cardápio.",
                 "summary": "Alterar cardápio.",
-                "tags": ["menu"],
+                "tags": ["Menu"],
                 "parameters": [
                     {
                         "name": "id",
@@ -129,7 +129,7 @@
             "delete": {
                 "description": "Essa rota é responsável por deletar um cardápio.",
                 "summary": "Deletar cardápio.",
-                "tags": ["menu"],
+                "tags": ["Menu"],
                 "parameters": [
                     {
                         "name": "id",
@@ -152,6 +152,134 @@
                     },
                     "400": {
                         "description": "Erro ao deletar cardápio."
+                    }
+                }
+            }
+        },
+        "/items": {
+            "post": {
+                "summary": "Cadastrar item",
+                "description": "Essa rota é responsável por cadastrar novos itens.",
+                "tags": ["Item"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/itemPost"
+                            },
+                            "examples": {
+                                "item": {
+                                    "value": {
+                                        "name": "Arroz",
+                                        "date": "2023-01-15"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/itemPost"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao cadastrar item."
+                    }
+                }
+            },
+            "get": {
+                "summary": "Buscar todos os itens",
+                "description": "Essa rota é responsável por buscar todos os itens.",
+                "tags": ["Item"],
+                "responses": {
+                    "201": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/items"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao buscar itens."
+                    }
+                }
+            }
+        },
+        "/items/{id}": {
+            "put": {
+                "summary": "Alterar nome de um item.",
+                "description": "Essa rota é responsável por alterar o nome de um item.",
+                "tags": ["Item"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do item a ser atualizado.",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/itemPut"
+                            },
+                            "examples": {
+                                "item": {
+                                    "value": {
+                                        "name": "Arrozz"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/itemPut"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao alterar nome do item."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar um item.",
+                "description": "Essa rota é responsável por deletar um item.",
+                "tags": ["Item"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do item a ser deletado.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "400": {
+                        "description": "Erro ao deletar item."
                     }
                 }
             }
@@ -237,6 +365,26 @@
                     "active": {
                         "type": "boolean"
                     }
+                }
+            },
+            "itemPost": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            }
+        },
+        "itemPut": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
                 }
             }
         }
