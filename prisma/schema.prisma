@@ -12,7 +12,7 @@ model Menu {
   meal        String
   description String?
   state       Boolean  @default(true)
-  date        DateTime
+  date        DateTime @db.Date
   items       Items[]  @relation("ItemsToMenu")
 
   @@map("menu")
