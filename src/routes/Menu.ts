@@ -1,6 +1,8 @@
 /* eslint-disable consistent-return */
 import { Router, Request, Response } from 'express';
 import pino from 'pino';
+import auth from '../middleware/auth';
+import isAdmin from '../middleware/isAdmin';
 import verifyIfNotANumber from '../middleware/verifyIfNotANumber';
 import MenuRepository from '../repositories/MenuRepository';
 import { IMenu, MsgAndMenu } from '../repositories/base/models/MenuModel';
@@ -11,7 +13,7 @@ const routes = Router();
 const logger = pino();
 const menuService: IMenuServiceInterface = new MenuService(new MenuRepository());
 
-routes.get('/', async (req: Request, res: Response) => {
+routes.get('/', auth, async (req: Request, res: Response) => {
   try {
 
     const { initialDate, finalDate } = req.query;
@@ -45,12 +47,12 @@ routes.get('/', async (req: Request, res: Response) => {
     logger.info('Operacao com sucesso: O usuario [email do usuario logado] consultou os cardapios.');
     return res.status(200).json(menus);
   } catch (error) {
-    logger.info('Operacao sem sucesso: O usuario [email do usuario logado] tentou consultar os cardapios.');
+    // logger.info('Operacao sem sucesso: O usuario [email do usuario logado] tentou consultar os cardapios.');
     return res.status(404).json(error.message);
   }
 });
 
-routes.post('/', async (req: Request, res: Response) => {
+routes.post('/', auth, isAdmin, async (req: Request, res: Response) => {
   try {
     const { items, date, meal }: IMenu = req.body;
     if( !date || !meal ) throw new Error('Preencha todos os campos obrigatórios!');
@@ -80,7 +82,7 @@ routes.post('/', async (req: Request, res: Response) => {
   }
 });
 
-routes.put('/:id', async (req: Request, res: Response) => {
+routes.put('/:id', auth, isAdmin,  async (req: Request, res: Response) => {
   try {
     const { items } = req.body;
     const { id } = req.params;
@@ -94,7 +96,7 @@ routes.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-routes.delete('/:id', async ( req: Request, res: Response) => {
+routes.delete('/:id', auth, isAdmin,  async ( req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const deletedMenuAndMessage: MsgAndMenu = await menuService.deleteMenu(Number(id));

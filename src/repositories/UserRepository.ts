@@ -19,7 +19,7 @@ export default class UserRepository extends BaseRepository {
     return userCreated;
   }
 
-  public async getByRegistration(registration): Promise<User> {
+  public async getUser(registration): Promise<User> {
     return super.getPrisma().user.findUnique({
       where: {
         registration
@@ -28,11 +28,7 @@ export default class UserRepository extends BaseRepository {
   }
 
   public async getAll(): Promise<User[]> {
-    return super.getPrisma().user.findMany({
-      where: {
-        status: true
-      }
-    });
+    return super.getPrisma().user.findMany();
   }
 
   public async changeStatusByRegistration(registration, actualStatus): Promise<User> {

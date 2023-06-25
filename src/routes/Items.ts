@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import pino from 'pino';
+import auth from '../middleware/auth';
+import isAdmin from '../middleware/isAdmin';
 import verifyIfNotANumber from '../middleware/verifyIfNotANumber';
 import ItemsRepository from '../repositories/ItemsRepository';
 import { Item } from '../repositories/base/models/ItemModel';
@@ -10,7 +12,7 @@ const routes = Router();
 const logger = pino();
 const itemService: IItemsServiceInterface = new ItemsService(new ItemsRepository());   
 
-routes.post('/', async (req: Request, res: Response) => {
+routes.post('/', auth, isAdmin,  async (req: Request, res: Response) => {
   try {
     const { name } = req.body;
     if( !name ) throw new Error('Preencha todos os campos obrigatórios!');
