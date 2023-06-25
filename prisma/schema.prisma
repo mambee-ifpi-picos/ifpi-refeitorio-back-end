@@ -13,7 +13,9 @@ model Menu {
   description String?
   state       Boolean  @default(true)
   date        DateTime @db.Date
-  items       Items[]  @relation("ItemsToMenu")
+
+  appointment Appointment[]
+  items       Items[]       @relation("ItemsToMenu")
 
   @@map("menu")
 }
@@ -26,4 +28,60 @@ model Items {
   menus     Menu[]   @relation("ItemsToMenu")
 
   @@map("items")
+}
+
+// model TypeUser {
+//   id   Int @id @default(autoincrement())
+//   type Int
+
+//   users User[]
+// }
+
+model User {
+  name         String
+  registration String  @id @unique
+  course       String?
+  email        String  @unique
+  status       Boolean @default(true)
+  type         Int
+
+  // type   TypeUser @relation(fields: [typeId], references: [id])
+  // typeId Int
+
+  appointment Appointment[]
+}
+
+model Appointment {
+  id       Int     @id @default(autoincrement())
+  presence Boolean @default(false)
+
+  user   User   @relation(fields: [userId], references: [registration])
+  userId String
+
+  menu   Menu @relation(fields: [menuId], references: [id])
+  menuId Int
+
+  absence Absence?
+}
+
+model Absence {
+  id          Int      @id @default(autoincrement())
+  date        DateTime @db.Date
+  observation String
+  active      Boolean
+
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId Int         @unique
+}
+
+model Holidays {
+  id   Int      @id @default(autoincrement())
+  date DateTime @db.Date
+}
+
+model Settings {
+  id                     Int    @id @default(autoincrement())
+  minimumAppointmentTime String
+  maximumAppointmentTime String
+  vacancies              Int
 }

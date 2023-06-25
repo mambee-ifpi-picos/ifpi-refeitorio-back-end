@@ -11,22 +11,22 @@ const logger = pino();
 const itemService: IItemsServiceInterface = new ItemsService(new ItemsRepository());   
 
 routes.post('/', async (req: Request, res: Response) => {
-    try {
-      const { name } = req.body;
-      if( !name ) throw new Error('Preencha todos os campos obrigatórios!');
+  try {
+    const { name } = req.body;
+    if( !name ) throw new Error('Preencha todos os campos obrigatórios!');
 
-      const createdItemAndMessage = await itemService.addItem({
-        name
-      } as Item); 
+    const createdItemAndMessage = await itemService.addItem({
+      name
+    } as Item); 
 
-      const item = [createdItemAndMessage.item.name, createdItemAndMessage.item.creationDate];
+    const item = [createdItemAndMessage.item.name, createdItemAndMessage.item.creationDate];
 
-      logger.info(`Operacao com sucesso: O usuario [email do usuario logado] registrou o item ${item[0]} criado na data ${item[1]}.`);
-      
-      return res.status(201).json(createdItemAndMessage);
-    } catch (error) {
-      return res.status(400).json(error.message);
-    }
+    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] registrou o item ${item[0]} criado na data ${item[1]}.`);
+    
+    return res.status(201).json(createdItemAndMessage);
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
 });
 
 routes.get('/', async (req: Request, res: Response) => {
