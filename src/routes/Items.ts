@@ -2,7 +2,6 @@ import { Router, Request, Response } from 'express';
 import pino from 'pino';
 import auth from '../middleware/auth';
 import isAdmin from '../middleware/isAdmin';
-import verifyIfNotANumber from '../middleware/verifyIfNotANumber';
 import ItemsRepository from '../repositories/ItemsRepository';
 import { Item } from '../repositories/base/models/ItemModel';
 import ItemsService from '../services/ItemsService';
@@ -31,7 +30,7 @@ routes.post('/', auth, isAdmin,  async (req: Request, res: Response) => {
   }
 });
 
-routes.get('/', async (req: Request, res: Response) => {
+routes.get('/', auth, isAdmin, async (req: Request, res: Response) => {
   try {
     const items = await itemService.getAll();
     logger.info('Operacao com sucesso: O usuario [email do usuario logado] consultou os itens.');
@@ -42,7 +41,7 @@ routes.get('/', async (req: Request, res: Response) => {
   }
 });
 
-routes.delete('/:id', async ( req: Request, res: Response ) => {
+routes.delete('/:id', auth, isAdmin, async ( req: Request, res: Response ) => {
   try{
     const { id } = req.params;
     const deletedItemAndMessage = await itemService.deleteItem( Number(id) );
@@ -53,7 +52,7 @@ routes.delete('/:id', async ( req: Request, res: Response ) => {
   }
 });
 
-routes.put('/:id', async (req: Request, res: Response ) => {
+routes.put('/:id', auth, isAdmin, async (req: Request, res: Response ) => {
   try{
     const { id } = req.params;
     const { name } = req.body;
