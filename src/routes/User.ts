@@ -35,6 +35,15 @@ routes.get('/unique/:registration', auth, async (req: Request, res: Response) =>
   }
 });
 
+routes.get('/me', auth, async (req: Request, res: Response) => {
+  try {
+    const user = await userService.getUser(res.locals.decoded.registration);
+    return res.status(200).json({ user });
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+});
+
 routes.get('/all', auth, isAdmin, async (req: Request, res: Response) => {
   try {
     const users = await userService.getAllUsers();

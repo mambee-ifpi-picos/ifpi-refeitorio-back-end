@@ -2,6 +2,7 @@ import { Menu } from '@prisma/client';
 import { IMenu, MenuFilter, MsgAndMenu, newMenu } from '../repositories/base/models/MenuModel';
 import IMenuRepository from '../repositories/interfaces/MenuRepositoryInterface';
 import IMenuServiceInterface from './interfaces/MenuServiceInterface';
+// import { TypeMenu } from 'src/models/enumerators';
 
 export default class MenuService implements IMenuServiceInterface {
   private menuRepository : IMenuRepository;
@@ -28,6 +29,11 @@ export default class MenuService implements IMenuServiceInterface {
     return menus;
   }
 
+  async getMenuById(menuId): Promise<Menu> {
+    const menu: Menu = await this.menuRepository.selectOne({ id: menuId });
+    return menu;
+  }
+
   async updateMenu(items: number[], id: number): Promise<MsgAndMenu> {
     const menuExist: Menu = await this.menuRepository.selectOne({ id });
     if(!menuExist) throw new Error ('Menu não encontrado');
@@ -41,5 +47,16 @@ export default class MenuService implements IMenuServiceInterface {
     if(!menu) throw new Error('Menu não encontrado');
     const deletedMenuAndMessage: MsgAndMenu = await this.menuRepository.delete(id);
     return deletedMenuAndMessage;
+  }
+
+  async getCurrentMenu() {
+    const actualMoment = new Date();
+    const minMomentToLunch = new Date(actualMoment.getFullYear(), actualMoment.getMonth(), actualMoment.getDate());
+    const minMomentToDinner = new Date(minMomentToLunch);
+    minMomentToDinner.setHours(15);
+    return this.menuRepository.selectOne({
+      date: minMomentToLunch,
+      meal: actualMoment > minMomentToDinner ? 'janta' : 'almoço'
+    });
   }
 }

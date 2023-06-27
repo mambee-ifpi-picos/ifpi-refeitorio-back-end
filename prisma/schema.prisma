@@ -9,13 +9,15 @@ datasource db {
 
 model Menu {
   id          Int      @id @default(autoincrement())
-  meal        String
+  meal        String // alterar para "type" com os valores presentes no enumerator
   description String?
   state       Boolean  @default(true)
   date        DateTime @db.Date
 
   appointment Appointment[]
   items       Items[]       @relation("ItemsToMenu")
+
+  // atributos de horário de "marcar presença" no menu: máximo e mínimo
 
   @@map("menu")
 }
@@ -66,7 +68,7 @@ model Appointment {
 
 model Absence {
   id          Int      @id @default(autoincrement())
-  date        DateTime @db.Date
+  // date        DateTime @db.Date
   observation String
   active      Boolean
 

@@ -23,6 +23,9 @@ export default class UserRepository extends BaseRepository {
     return super.getPrisma().user.findUnique({
       where: {
         registration
+      },
+      include: {
+        appointment: true
       }
     });
   }

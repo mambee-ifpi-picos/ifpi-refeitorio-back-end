@@ -2,8 +2,6 @@ import { User } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { TypeUser } from '../models/enumerators';
 
-
-
 // export default class UserService implements IUserServiceInterface {
 export default class UserService {
   private userRepository;
@@ -48,7 +46,7 @@ export default class UserService {
     return allUsers;
   }
 
-  async getUser(registration): Promise<User> {
+  async getUser(registration): Promise<any> {
     const user = await this.userRepository.getUser(registration);
     if(!user){ 
       throw new Error('Usuário não encontrado.');
