@@ -1,0 +1,24 @@
+alterar funções get dos repositories
+
+requests: verificar se o user está ativo
+
+mensagens de retorno nas rotas
+
+filtros nas rotas de buscar informações
+
+pasta de utils: adicionar funções que estão sendo usasdas em outros lugares (converção de data no route do menu e a chamada dos services nos middlewares)
+
+casdastro de usuário: divisão entre aluno e ADMIN
+                      atualmente só está levando em consideração a matricula e email
+
+documentação
+
+aumentar a tipagem do código
+
+tabela menu: alterar de meal (almoco ou janta) para type (1 ou 2) e adicionar isso no enumerators
+
+mocar mensagens em um único arquivo???
+
+logs
+
+testes

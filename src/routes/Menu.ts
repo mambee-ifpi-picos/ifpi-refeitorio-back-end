@@ -1,16 +1,16 @@
-/* eslint-disable consistent-return */
 import { Router, Request, Response } from 'express';
 import pino from 'pino';
 import auth from '../middleware/auth';
 import isAdmin from '../middleware/isAdmin';
-import verifyIfNotANumber from '../middleware/verifyIfNotANumber';
+import { NewMenu, Menu } from '../models/Menu';
 import MenuRepository from '../repositories/MenuRepository';
-import { IMenu, MsgAndMenu } from '../repositories/base/models/MenuModel';
 import MenuService from '../services/MenuService';
 import IMenuServiceInterface from '../services/interfaces/MenuServiceInterface';
+import verifyIfNotANumber from '../utils/verifyIfNotANumber';
 
 const routes = Router();
 const logger = pino();
+
 const menuService: IMenuServiceInterface = new MenuService(new MenuRepository());
 
 routes.get('/', auth, async (req: Request, res: Response) => {
@@ -39,22 +39,26 @@ routes.get('/', auth, async (req: Request, res: Response) => {
       convertedFinalDate = new Date(`${finalYear}/${finalMonth}/${finalDay}`);
     }
 
-    const menus: IMenu[] = await menuService.getMany({
+    const menus: Menu[] = await menuService.getMany({
       ...(convertedInitialDate && { convertedInitialDate }),
       ...(convertedFinalDate && { convertedFinalDate }),
     });
     
     logger.info('Operacao com sucesso: O usuario [email do usuario logado] consultou os cardapios.');
-    return res.status(200).json(menus);
+    return res.status(200).json({
+      data: menus
+    });
   } catch (error) {
     // logger.info('Operacao sem sucesso: O usuario [email do usuario logado] tentou consultar os cardapios.');
-    return res.status(404).json(error.message);
+    return res.status(404).json({
+      error: error.message
+    });
   }
 });
 
 routes.post('/', auth, isAdmin, async (req: Request, res: Response) => {
   try {
-    const { items, date, meal }: IMenu = req.body;
+    const { items, date, meal }: NewMenu = req.body;
     if( !date || !meal ) throw new Error('Preencha todos os campos obrigatórios!');
 
     const stringDate = String(date);
@@ -68,44 +72,56 @@ routes.post('/', auth, isAdmin, async (req: Request, res: Response) => {
 
     const convertedDate = new Date(`${year}/${month}/${day}`);
     
-    const createdMenuAndMessage = await menuService.addMenu({
+    const createdMenu = await menuService.addMenu({
       items,
       date: convertedDate,
       meal
-    } as IMenu);
-    // const menu = [createdMenuAndMessage.menu.items, createdMenuAndMessage.menu.date, createdMenuAndMessage.menu.meal];
+    } as NewMenu);
+    // const menu = [createdMenu.menu.items, createdMenu.menu.date, createdMenu.menu.meal];
     // logger.info(`Operacao com sucesso: O usuario [email do usuario logado] registrou o cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`);
-    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] registrou o cardapio: ${createdMenuAndMessage.menu}`);
-    return res.status(201).json(createdMenuAndMessage);
+    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] registrou o cardapio: ${createdMenu}`);
+    return res.status(201).json({
+      data: createdMenu
+    });
   } catch (error) {
-    res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 
 routes.put('/:id', auth, isAdmin,  async (req: Request, res: Response) => {
   try {
-    const { items } = req.body;
+    const { items }: { items: number[] } = req.body;
     const { id } = req.params;
-    const changedMenuAndMessage = await menuService.updateMenu(items, Number(id));
-    /* const menu = [changedMenuAndMessage.menu.items, changedMenuAndMessage.menu.date, changedMenuAndMessage.menu.meal];
+    const changedMenu = await menuService.updateMenu(items, Number(id));
+    /* const menu = [changedMenu.menu.items, changedMenu.menu.date, changedMenu.menu.meal];
     logger.info(`Operacao com sucesso: O usuario [email do usuario logado] alterou dados do cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`); */
-    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] alterou os dados do cardapio: ${changedMenuAndMessage.menu}`);
-    return res.status(200).json(changedMenuAndMessage);
+    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] alterou os dados do cardapio: ${changedMenu}`);
+    return res.status(200).json({
+      data: changedMenu
+    });
   } catch (error) {
-    res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 
 routes.delete('/:id', auth, isAdmin,  async ( req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const deletedMenuAndMessage: MsgAndMenu = await menuService.deleteMenu(Number(id));
-    /* const menu = [deletedMenuAndMessage.menu.items, deletedMenuAndMessage.menu.date, deletedMenuAndMessage.menu.meal];
+    const deletedMenu = await menuService.deleteMenu(Number(id));
+    /* const menu = [deletedMenu.menu.items, deletedMenu.menu.date, deletedMenu.menu.meal];
     logger.info(`Operacao com sucesso: O usuario [email do usuario logado] excluiu o cardapio [${menu[0]} | ${menu[1]} | ${menu[2]}].`); */
-    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] excluiu o cardapio: ${deletedMenuAndMessage.menu}`);
-    return res.status(200).json(deletedMenuAndMessage);
+    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] excluiu o cardapio: ${deletedMenu}`);
+    return res.status(200).json({
+      data: deletedMenu
+    });
   } catch (error) {
-    res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 

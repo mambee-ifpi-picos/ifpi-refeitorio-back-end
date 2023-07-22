@@ -3,7 +3,6 @@ import pino from 'pino';
 import auth from '../middleware/auth';
 import isAdmin from '../middleware/isAdmin';
 import ItemsRepository from '../repositories/ItemsRepository';
-import { Item } from '../repositories/base/models/ItemModel';
 import ItemsService from '../services/ItemsService';
 import IItemsServiceInterface from '../services/interfaces/ItemsServiceInterface';
 
@@ -13,20 +12,19 @@ const itemService: IItemsServiceInterface = new ItemsService(new ItemsRepository
 
 routes.post('/', auth, isAdmin,  async (req: Request, res: Response) => {
   try {
-    const { name } = req.body;
+    const { name }: { name: string } = req.body;
     if( !name ) throw new Error('Preencha todos os campos obrigatórios!');
 
-    const createdItemAndMessage = await itemService.addItem({
+    const createdItem = await itemService.addItem({
       name
-    } as Item); 
-
-    const item = [createdItemAndMessage.item.name, createdItemAndMessage.item.creationDate];
-
-    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] registrou o item ${item[0]} criado na data ${item[1]}.`);
-    
-    return res.status(201).json(createdItemAndMessage);
+    });     
+    return res.status(201).json({
+      data: createdItem,
+    });
   } catch (error) {
-    return res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 
@@ -34,21 +32,29 @@ routes.get('/', auth, isAdmin, async (req: Request, res: Response) => {
   try {
     const items = await itemService.getAll();
     logger.info('Operacao com sucesso: O usuario [email do usuario logado] consultou os itens.');
-    return res.status(200).json(items);
+    return res.status(200).json({
+      data: items
+    });
   } catch (error) {
     logger.info('Operacao sem sucesso: O usuario [email do usuario logado] tentou consultar os itens.');
-    return res.status(404).json(error.message);
+    return res.status(404).json({
+      error: error.message
+    });
   }
 });
 
-routes.delete('/:id', auth, isAdmin, async ( req: Request, res: Response ) => {
+routes.delete('/:id', auth, isAdmin, async (req: Request, res: Response) => {
   try{
     const { id } = req.params;
-    const deletedItemAndMessage = await itemService.deleteItem( Number(id) );
-    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] excluiu o item [${deletedItemAndMessage}].`);
-    return res.status(200).json(deletedItemAndMessage);
+    const deletedItem = await itemService.deleteItem( Number(id) );
+    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] excluiu o item [${deletedItem}].`);
+    return res.status(200).json({
+      data: deletedItem
+    });
   } catch (error) {
-    return res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 
@@ -56,11 +62,15 @@ routes.put('/:id', auth, isAdmin, async (req: Request, res: Response ) => {
   try{
     const { id } = req.params;
     const { name } = req.body;
-    const updatedItemAndMessage = await itemService.updateItem( Number(id), String(name) );
-    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] atualizou o nome do item [${updatedItemAndMessage}].`);
-    return res.status(200).json(updatedItemAndMessage);
+    const updatedItem = await itemService.updateItem( Number(id), String(name) );
+    logger.info(`Operacao com sucesso: O usuario [email do usuario logado] atualizou o nome do item [${updatedItem}].`);
+    return res.status(200).json({
+      data: updatedItem
+    });
   } catch (error) {
-    return res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 

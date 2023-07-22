@@ -1,12 +1,12 @@
 import { Prisma } from '@prisma/client';
-import { Item, MsgAndItem } from '../base/models/ItemModel';
+import { NewItem, Item, ItemToUpdate } from '../../models/Item';
 
 interface IItemsRepository {
-    add(newItem: Item): Promise<MsgAndItem>;
-    getAll(): Promise<Item[]>;
-    selectOne( where: Prisma.ItemsWhereInput ): Promise<Item>;
-    delete( id: number): Promise<MsgAndItem>;
-    update( data: Item ): Promise<MsgAndItem>;
+  add(infosNewItem: NewItem): Promise<Item>;
+  getAll(): Promise<Item[]>;
+  selectOne(where: Prisma.ItemWhereInput): Promise<Item>;
+  deleteById(id: number): Promise<Item>;
+  update(data: ItemToUpdate): Promise<Item>;
 }
 
 export default IItemsRepository;

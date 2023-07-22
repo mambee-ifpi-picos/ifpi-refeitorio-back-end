@@ -1,4 +1,4 @@
-import { Item, MsgAndItem } from '../repositories/base/models/ItemModel';
+import { Item } from '../models/Item';
 import IItemsRepositoryInterface from '../repositories/interfaces/ItemsRepositoryInterface';
 import IItemsServiceInterface from './interfaces/ItemsServiceInterface';
 
@@ -9,28 +9,21 @@ export default class ItemsService implements IItemsServiceInterface {
     this.itemRepository = iItemsRepository;
   }
 
-  async addItem({ name }: Item): Promise<MsgAndItem> {
-
+  async addItem({ name }: { name: string }): Promise<Item> {
     const itemExist = await this.itemRepository.selectOne({ name });
-
-    let createdItemAndMessage: MsgAndItem | null;
+    let createdItem: Item | null;
     if(itemExist) {
-      if(itemExist.active === true) throw new Error('Já existe um item com esse nome.');
-
-      const { item } = await this.itemRepository.update({ id: itemExist.id, name, active: true });
-
-      const msg = 'Cadastro salvo com Sucesso.';
-
-      createdItemAndMessage = { msg, item };
-
+      if(itemExist.active === true) {
+        throw new Error('Já existe um item com esse nome.');
+      }
+      const item = await this.itemRepository.update({ id: itemExist.id, name, active: true });
+      createdItem =item;
     } else {
-      createdItemAndMessage = await this.itemRepository.add({
+      createdItem = await this.itemRepository.add({
         name
-      } as Item);
-
+      } as Item);;
     }
-
-    return createdItemAndMessage;
+    return createdItem;
   }
 
   async getAll(): Promise<Item[]> {
@@ -38,16 +31,16 @@ export default class ItemsService implements IItemsServiceInterface {
     return items;
   }
 
-  async deleteItem( id: number ): Promise<MsgAndItem> {
+  async deleteItem(id: number): Promise<Item> {
     const item = await this.itemRepository.selectOne({ id });
     if (!item) throw new Error('Item não encontrado.');
-    const deletedItemAndMessage = await this.itemRepository.delete(id);
-    return deletedItemAndMessage;
+    const deletedItem = await this.itemRepository.deleteById(id);
+    return deletedItem;
   }
 
-  async updateItem( id: number, name: string ): Promise<MsgAndItem> {
-    const updatedItemAndMessage = await this.itemRepository.update({ id, name });
-    if (!updatedItemAndMessage || updatedItemAndMessage.item.active === false) throw new Error('Item não encontrado.');
-    return updatedItemAndMessage;
+  async updateItem(id: number, name: string): Promise<Item> {
+    const updatedItem = await this.itemRepository.update({ id, name });
+    if (!updatedItem || updatedItem.active === false) throw new Error('Item não encontrado.');
+    return updatedItem;
   }
 }

@@ -15,21 +15,21 @@ model Menu {
   date        DateTime @db.Date
 
   appointment Appointment[]
-  items       Items[]       @relation("ItemsToMenu")
+  items       Item[]       @relation("ItemToMenu")
 
   // atributos de horário de "marcar presença" no menu: máximo e mínimo
 
   @@map("menu")
 }
 
-model Items {
+model Item {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
-  menus     Menu[]   @relation("ItemsToMenu")
+  menus     Menu[]   @relation("ItemToMenu")
 
-  @@map("items")
+  @@map("item")
 }
 
 // model TypeUser {

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 export default function auth (req: Request, res: Response, next: NextFunction) {
+  // next();
   const { authorization } = req.headers;
   if(authorization) {
     jwt.verify(authorization, process.env.JWT_SECRET, (error, decoded) => {

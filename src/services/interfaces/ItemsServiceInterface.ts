@@ -1,11 +1,10 @@
-import { Item, MsgAndItem } from '../../repositories/base/models/ItemModel';
-
+import { Item } from '../../models/Item';
 
 interface IItemsServiceInterface {
-    addItem({ name }: Item ): Promise<MsgAndItem>;
-    getAll(): Promise<Item[]>;
-    deleteItem( id: number ): Promise<MsgAndItem>;
-    updateItem( id: number, name: string ): Promise<MsgAndItem>;
+  addItem({ name }: { name: string } ): Promise<Item>;
+  getAll(): Promise<Item[]>;
+  deleteItem( id: number ): Promise<Item>;
+  updateItem( id: number, name: string ): Promise<Item>;
 }
 
 export default IItemsServiceInterface;

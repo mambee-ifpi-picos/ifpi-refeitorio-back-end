@@ -1,33 +1,30 @@
 import { Prisma } from '@prisma/client';
+import { NewItem, Item, ItemToUpdate } from '../models/Item';
 import  BaseRepository  from './base/BaseRepository';
-import { Item, MsgAndItem } from './base/models/ItemModel';
 import IItemsRepositoryInterface from './interfaces/ItemsRepositoryInterface';
 
 export default class ItemsRepository extends BaseRepository implements IItemsRepositoryInterface {
 
-  public async add(newItem: Item): Promise<MsgAndItem> {
-    const createdItem = await super.getPrisma().items.create({
-      data: newItem
+  public async add(infosNewItem: NewItem): Promise<Item> {
+    return super.getPrisma().item.create({
+      data: infosNewItem
     });
-    const msg = 'Cadastro salvo com Sucesso.';
-    return { msg, item: createdItem };
   }
 
-  public async getAll(): Promise<Item[]> {
-    return super.getPrisma().items.findMany({
+  public async getAll (): Promise<Item[]> {
+    return super.getPrisma().item.findMany({
       where: {
         active: true,
       },
     });
   }
 
-  public async selectOne( where: Prisma.ItemsWhereInput ): Promise<Item> {
-    const result = await super.getPrisma().items.findFirst({ where });
-    return result;
+  public async selectOne (where: Prisma.ItemWhereInput): Promise<Item> {
+    return super.getPrisma().item.findFirst({ where });
   }
 
-  public async delete( id: number ): Promise<MsgAndItem> {
-    const deletedItem = await super.getPrisma().items.update({
+  public async deleteById (id: number): Promise<Item> {
+    return super.getPrisma().item.update({
       where: {
         id,
       },
@@ -35,14 +32,10 @@ export default class ItemsRepository extends BaseRepository implements IItemsRep
         active: false,
       },
     });
-
-    const msg = 'Item deletado com sucesso.';
-
-    return { msg, item: deletedItem };
   }
 
-  public async update( data: Item ): Promise<MsgAndItem> {
-    const updatedItem = await super.getPrisma().items.update({
+  public async update (data: ItemToUpdate): Promise<Item> {
+    return super.getPrisma().item.update({
       where: {
         id: data.id,
       },
@@ -51,9 +44,5 @@ export default class ItemsRepository extends BaseRepository implements IItemsRep
         active: data.active,
       },
     });
-
-    const msg = 'O item foi atualizado com sucesso.';
-
-    return { msg, item: updatedItem };
   }
 }

@@ -1,9 +1,8 @@
 import { User } from '@prisma/client';
 import BaseRepository from './base/BaseRepository';
+import IUserRepository from './interfaces/UserRepositoryInterface';
 
-
-// export default class UserRepository extends BaseRepository implements IUserRepository {
-export default class UserRepository extends BaseRepository {
+export default class UserRepository extends BaseRepository implements IUserRepository {
 
   public async add(infosUser): Promise<User> {
     const userCreated = await super.getPrisma().user.create({
@@ -19,7 +18,7 @@ export default class UserRepository extends BaseRepository {
     return userCreated;
   }
 
-  public async getUser(registration): Promise<User> {
+  public async getUser(registration: string): Promise<User> {
     return super.getPrisma().user.findUnique({
       where: {
         registration
@@ -34,7 +33,7 @@ export default class UserRepository extends BaseRepository {
     return super.getPrisma().user.findMany();
   }
 
-  public async changeStatusByRegistration(registration, actualStatus): Promise<User> {
+  public async changeStatusByRegistration(registration: string, actualStatus: boolean): Promise<User> {
     const updatedUser = super.getPrisma().user.update({
       where: {
         registration

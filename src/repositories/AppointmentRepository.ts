@@ -1,50 +1,33 @@
-import { Appointment } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { Appointment } from '../models/Appointment';
 import BaseRepository from './base/BaseRepository';
+import IAppointmentRepository from './interfaces/AppointmentRepositoryInterface';
 
+export default class AppointmentRepository extends BaseRepository implements IAppointmentRepository {
 
-// export default class UserRepository extends BaseRepository implements IUserRepository {
-export default class AppointmentRepository extends BaseRepository {
-
-  public async create (registration, menuId): Promise<Appointment> {
-    const appointmentCreated = await super.getPrisma().appointment.create({
+  public async create (registration: string, menuId: number): Promise<Appointment> {
+    return super.getPrisma().appointment.create({
       data: {
         userId: registration,
         menuId
       }
     });
-    return appointmentCreated;
   }
 
-  public async getAll (menuId, userId): Promise<Appointment[]> {
-    const appointments = await super.getPrisma().appointment.findMany({
-      where: {
-        ...(menuId && { menuId }),
-        ...(userId && { userId })
-      }
-    });
-    return appointments;
+  public async getMany (where: Prisma.AppointmentWhereInput): Promise<Appointment[]> {
+    return super.getPrisma().appointment.findMany({ where });
   }
 
-  public async getById (appointmentId): Promise<Appointment> {
-    const appointment = await super.getPrisma().appointment.findUnique({
-      where: {
-        id: appointmentId
-      }
-    });
-    return appointment;
+  public async selectOne (where: Prisma.AppointmentWhereInput): Promise<Appointment> {
+    return super.getPrisma().appointment.findFirst({ where });
   }
 
-  public async deleteById (appointmentId): Promise<Appointment> {
-    const appointmentDeleted = await super.getPrisma().appointment.delete({
-      where: {
-        id: appointmentId
-      }
-    });
-    return appointmentDeleted;
+  public async deleteById (where: Prisma.AppointmentWhereUniqueInput): Promise<Appointment> {
+    return super.getPrisma().appointment.delete({ where });
   }
 
-  public async changePresenceToTrue (appointmentId): Promise<Appointment> {
-    const appointmentUpdated = await super.getPrisma().appointment.update({
+  public async changePresenceToTrue (appointmentId: number): Promise<Appointment> {
+    return super.getPrisma().appointment.update({
       data: {
         presence: true
       },
@@ -52,6 +35,5 @@ export default class AppointmentRepository extends BaseRepository {
         id: appointmentId
       }
     });
-    return appointmentUpdated;
   }
 }

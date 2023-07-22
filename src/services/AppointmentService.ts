@@ -1,35 +1,56 @@
-import { Appointment } from '@prisma/client';
+import { Appointment } from '../models/Appointment';
+import IAppointmentRepository from '../repositories/interfaces/AppointmentRepositoryInterface';
+import IAppointmentService from './interfaces/AppointmentServiceInterface';
 
+export default class AppointmentService implements IAppointmentService {
+  private appointmentRepository: IAppointmentRepository;
 
-export default class UserService {
-  private appointmentRepository;
-
-  constructor(iAppointmentRepository){
-    this.appointmentRepository = iAppointmentRepository;
+  constructor(AppointmentRepository){
+    this.appointmentRepository = AppointmentRepository;
   }
 
-  async createAppointment (registration, menuId): Promise<Appointment> {
+  async createAppointment (registration: string, menuId: number): Promise<Appointment> {
     // verificar se o usuário tem ou não três faltas
-    const appointmentCreated = this.appointmentRepository.create(registration, menuId);
+    const appointmentCreated = await this.appointmentRepository.create(registration, menuId);
     return appointmentCreated;
   }
   
-  async cancelAppointment (appointmentId): Promise<Appointment> {
-    const appointmentExist = this.appointmentRepository.getById(appointmentId);
+  async cancelAppointment (appointmentId: number): Promise<Appointment> {
+    const appointmentExist = await this.appointmentRepository.selectOne({
+      id: appointmentId
+    });
     if(!appointmentExist) throw new Error('Este agendamento não existe.');
-    const appointmentDeleted = this.appointmentRepository.deleteById(appointmentId);
+    const appointmentDeleted = await this.appointmentRepository.deleteById({
+      id: appointmentId
+    });
     return appointmentDeleted;
   }
 
-  async getAllAppointments (menuId, userRegistration): Promise<Appointment> {
+  async getAllAppointments (menuId: number, userRegistration: string): Promise<Appointment[]> {
     const userId = !menuId ? userRegistration : undefined;
-    const appointments = await this.appointmentRepository.getAll(menuId, userId);
+    const appointments = await this.appointmentRepository.getMany({
+      ...(menuId && { menuId }),
+      ...(userId && { userId })
+    });
     return appointments;
   }
 
-  async markPresence (appointmentId): Promise<Appointment> {
-    const appointmentUpdated = this.appointmentRepository.changePresenceToTrue(appointmentId);
-    return appointmentUpdated;
+  async getAllUserAppointments (userRegistration: string): Promise<Appointment[]> {
+    const appointments = await this.appointmentRepository.getMany({
+      userId: userRegistration
+    });
+    return appointments;
   }
 
+  async getAllMenuAppointments (menuId: number): Promise<Appointment[]> {
+    const appointments = await this.appointmentRepository.getMany({
+      menuId
+    });
+    return appointments;
+  }
+
+  async markPresence (appointmentId: number): Promise<Appointment> {
+    const appointmentUpdated = await this.appointmentRepository.changePresenceToTrue(appointmentId);
+    return appointmentUpdated;
+  }
 }

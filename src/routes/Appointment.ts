@@ -10,21 +10,26 @@ import MenuService from '../services/MenuService';
 import UserService from '../services/UserService';
 
 const routes = Router();
-const userService = new UserService(new UserRepository);
+
+const userService = new UserService(new UserRepository());
 const menuService = new MenuService(new MenuRepository());
-const appointmentService = new AppointmentService(new AppointmentRepository);
+const appointmentService = new AppointmentService(new AppointmentRepository());
 
 routes.post('/', auth, async (req: Request, res: Response) => {
   try {
-    const { menuId } = req.body;
+    const { menuId }: { menuId: number } = req.body;
     const user = await userService.getUser(res.locals.decoded.registration);
     if(!user) throw new Error('Usuário não encontrado.');
     const menu = await menuService.getMenuById(menuId);
     if(!menu) throw new Error('Menu não encontrado.');
     const appointment = await appointmentService.createAppointment(user.registration, menu.id);
-    return res.status(201).json({ appointment });
+    return res.status(201).json({
+      data: appointment
+    });
   } catch (error) {
-    return res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 
@@ -32,9 +37,13 @@ routes.delete('/', auth, async (req: Request, res: Response) => {
   try {
     const { appointmentId } = req.body;
     const appointmentDeleted = await appointmentService.cancelAppointment(appointmentId);
-    return res.status(201).json({ appointment: appointmentDeleted });
+    return res.status(200).json({
+      data: appointmentDeleted
+    });
   } catch (error) {
-    return res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 
@@ -42,14 +51,17 @@ routes.get('/getAll', auth, isAdmin, async (req: Request, res: Response) => {
   try {
     const { menuId, userId } = req.body;
     const appointments = await appointmentService.getAllAppointments(menuId, userId);
-    return res.status(200).json({ appointments });
+    return res.status(200).json({
+      data: appointments
+    });
   } catch (error) {
-    return res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 
-// routes.put('/markPresence', auth, isUserTypeRestaurant, async (req: Request, res: Response) => {
-routes.put('/markPresence', async (req: Request, res: Response) => {
+routes.put('/markPresence', auth, isUserTypeRestaurant, async (req: Request, res: Response) => {
   try {
     const { userId } = req.body;
     const user = await userService.getUser(userId);
@@ -59,9 +71,13 @@ routes.put('/markPresence', async (req: Request, res: Response) => {
     const appointmentInCurrentMenu = user.appointment?.filter(appointment => appointment.menuId === currentMenu.id)[0];
     if(!appointmentInCurrentMenu) throw new Error('O usuário não realizou a reserva.');
     const appointmentMarkedHowPresent = await appointmentService.markPresence(appointmentInCurrentMenu.id);
-    return res.status(200).json({ appointmentMarkedHowPresent });
+    return res.status(200).json({
+      data: appointmentMarkedHowPresent
+    });
   } catch (error) {
-    return res.status(400).json(error.message);
+    return res.status(400).json({
+      error: error.message
+    });
   }
 });
 
